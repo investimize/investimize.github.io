@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+    <head>
+
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Investimize</title>
+
+        <!-- TODO: Add meta tags with http://secretsaucehq.com/mega-tags/. -->
+        <!-- TODO: Add favicon with http://realfavicongenerator.net/ or http://www.favicomatic.com/. -->
+        
+        <!-- TODO: replace `latest` with a specific version. -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/normalize/latest/normalize.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/flexboxgrid/latest/flexboxgrid.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontawesome/latest/css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/components.css">
+        <link rel="stylesheet" href="css/app.css">
+
+    </head>
+    <body>
+
+        <div id="app">
+
+            <div id="header">
+
+                <nav>
+                    <div>
+                        <a v-link="{ path: '/', exact: true }"><img class="investimize-logo"></a>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="hamburger">
+                        <label for="hamburger" class="hamburger">
+                            <i></i><i></i><i></i><i></i>
+                        </label>
+                        <ul>
+                            <li><a v-link="{ path: '/', exact: true }">Introducing Investimize</a></li>
+                            <li><a v-link="{ path: '/howitworks' }">How it works</a></li>
+                            <li><a v-link="{ path: '/whoweare' }">Who we are</a></li>
+                            <li><a v-link="{ path: '/app' }">Get my portfolio</a></li>
+                        </ul>
+                    </div>
+                </nav>
+
+                <router-view></router-view>
+
+            </div>
+
+        </div>
+
+        <!-- TODO: replace `latest` with a specific version. -->
+        <script src="https://cdn.jsdelivr.net/vue/latest/vue.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/vue.router/latest/vue-router.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/vue.resource/latest/vue-resource.min.js"></script>
+        <script src="js/app.js"></script>
+        
+        <!-- TODO: replace `UA-XXXXX-X` with your domain's id. -->
+        <script>
+            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+            e.src='https://www.google-analytics.com/analytics.js';
+            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+            ga('create','UA-XXXXX-X','auto');ga('send','pageview');
+        </script>
+
+    </body>
+</html>

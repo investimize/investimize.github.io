@@ -1,0 +1,279 @@
+/* Chiclet button */
+
+.chiclet {
+    display: inline-block;
+    text-decoration: none;
+    font: inherit;            
+    color: rgba(0, 0, 0, 0.7);
+    text-shadow: -1px 1px 1px #fff,
+        0 0 0 rgba(0, 0, 0, 0.25);
+    vertical-align: middle;
+    line-height: 1;
+    margin: 2px 1px 6px 1px;
+    padding: 0.5em 0.6em;
+    background: #eff0f2;
+    border-radius: 4px;
+    border: 0;
+    border-top: 2px solid #f5f5f5;
+    box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.05),
+        0 1px 0 #c3c3c3,
+        0 2px 0 #c6c6c6,
+        0 3px 0 #c9c9c9,
+        0 3px 3px #333;
+}
+
+.chiclet:disabled {
+    color: rgba(0, 0, 0, 0.35);
+}
+
+.chiclet::selection {
+    color: white;
+    background: #5af;
+    text-shadow: none;
+}
+
+.chiclet:enabled:hover {
+    margin: 3px 1px 5px 1px;
+    box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.05),
+        0 1px 0 #c3c3c3,
+        0 2px 0 #c6c6c6,
+        0 2px 3px #333;
+}
+
+.chiclet:enabled:active {
+    background: #ebeced;
+    margin: 5px 1px 3px 1px;
+    box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.10),
+        0 0 3px #333;
+    border-top-color: #eee;
+}
+
+.chiclet:focus {
+    outline: 0;
+    box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.05),
+        0 1px 0 #c3c3c3,
+        0 2px 0 #c6c6c6,
+        0 3px 0 #c9c9c9,
+        0 3px 4px -1px #333,
+        0 3px 0 5px rgba(0, 0, 0, 0.07);
+}
+
+.chiclet:focus:hover {
+    box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.05),
+        0 1px 0 #c3c3c3,
+        0 2px 0 #c6c6c6,
+        0 2px 4px -1px #333,
+        0 2px 0 5px rgba(0, 0, 0, 0.07);
+}
+
+/* Safari does not seem to get focus on click.
+   https://gist.github.com/cvrebert/68659d0333a578d75372 */
+.chiclet:enabled:focus:active {
+    box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.10),
+        0 0 4px -1px #333,
+        0 0 0 5px rgba(0, 0, 0, 0.07);
+}
+
+/* Material hamburger button. */
+
+#hamburger {
+    display: none;
+}
+
+.hamburger {
+    width: 51px;
+    height: 51px;
+    display: inline-block;
+    background: #f7f7f7;
+    border-radius: 50%;
+    position: relative;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    vertical-align: middle;
+    transition: all 200ms ease;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-backface-visibility: hidden; /* Fix 1px shift bug on Chrome. */
+}
+
+/* .hamburger:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+} */
+
+.hamburger > i {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 25px;
+    height: 2px;
+    background: #333;
+    border-radius: 1px;
+    transform: translateX(-50%);
+    transition: all 200ms ease-in-out;
+}
+
+.hamburger > i:first-child {
+    margin-top: -9px;
+}
+
+.hamburger > i:nth-child(2), .hamburger > i:nth-child(3) {
+    margin-top: -1px;
+}
+
+.hamburger > i:last-child {
+    margin-top: 7px;
+}
+
+#hamburger:checked ~ .hamburger > i:first-child, #hamburger:checked ~ .hamburger > i:last-child {
+    opacity: 0;
+    transform: scale(0);
+    margin-top: -1px;
+}
+
+#hamburger:checked ~ .hamburger > i:nth-child(2) {
+    transform: translateX(-50%) rotate(45deg);
+}
+
+#hamburger:checked ~ .hamburger > i:nth-child(3) {
+    transform: translateX(-50%) rotate(-45deg);
+}
+
+/* Material responsive menu. */
+
+nav {
+    color: #f7f7f7;
+    display: table;
+    width: 100%;
+    position: relative;
+    background: rgba(255, 255, 255, 0);
+    z-index: 999;
+}
+
+nav a {
+    color: inherit;
+    font: inherit;
+    text-decoration: none;
+    display: inline-block;
+    padding: 0.6em 0;
+    white-space: nowrap;
+}
+
+nav > div:last-child a {
+    box-sizing: border-box;
+    border-bottom: 2px solid transparent;
+}
+
+nav > div:last-child a:hover {
+    border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+nav > div:last-child a.active {
+    border-bottom: 2px solid white;
+}
+
+nav > div:first-child > a {
+    font-size: 1.4em;
+}
+
+nav > div {
+    display: table-cell;
+    vertical-align: middle;
+    padding: 1.2em 6%;
+}
+
+nav > div:first-child {
+    padding-right: 0;
+}
+
+nav > div:last-child {
+    padding-left: 0;
+    text-align: right;
+    position: relative;
+}
+
+nav > div:last-child ul {
+    display: table;
+    float: right;
+    text-align: left;
+    vertical-align: middle;
+    list-style-type: none;
+}
+
+nav > div:last-child li {
+    display: table-cell;
+    padding: 0 1em;
+}
+
+nav > div:last-child li:first-child {
+    padding-left: 0;
+}
+
+nav > div:last-child li:last-child {
+    padding-right: 0;
+}
+
+nav > div:last-child ul {
+    margin: 0;
+    padding: 0;
+}
+
+.hamburger {
+    display: none;
+}
+
+@media only screen and (max-width: 48em) {
+    
+    nav > div {
+        padding: 0.5em 1.4em;
+    }
+    
+    .hamburger {
+        display: inline-block;
+    }
+    
+    #hamburger ~ ul, #hamburger ~ ul li, #hamburger ~ ul a {
+        display: block;
+    }
+    
+    #hamburger ~ ul {
+        position: absolute;
+        bottom: 0; /* Fix positioning in IE. */
+        right: 1.4em;
+        background: #f7f7f7;
+        color: #333;
+        border-radius: 4px;
+        transform: translateY(100%) scale(0);
+        transition: transform 200ms ease;
+        transform-origin: 85% 0;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    }
+    
+    #hamburger ~ ul a.active, #hamburger ~ ul a:hover {
+        border-color: transparent;
+    }
+    
+    #hamburger ~ ul li {
+        padding: 0;
+        box-shadow: inset 0 2px 0 -1px white, inset 0 -2px 0 -1px rgba(0, 0, 0, 0.05);
+    }
+    
+    #hamburger ~ ul li:first-child {
+        padding: 0;
+        box-shadow: inset 0 -2px 0 -1px rgba(0, 0, 0, 0.05);
+    }
+    
+    #hamburger ~ ul li:last-child {
+        padding: 0;
+        box-shadow: inset 0 2px 0 -1px white;
+    }
+    
+    #hamburger ~ ul a {
+        padding-left: 1em;
+        padding-right: 1em;
+    }
+    
+    #hamburger:checked ~ ul {
+        transform: translateY(100%) scale(1);
+    }
+    
+}

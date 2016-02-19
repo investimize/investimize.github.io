@@ -1,0 +1,222 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:300,400,500,700);
+@import url(https://fonts.googleapis.com/css?family=Gudea:300,400,500);
+
+/* Always show scrollbar. */
+html {
+    overflow-y: scroll;
+}
+
+/* Remove 300ms click delay on touch devices.
+   http://patrickhlauke.github.io/touch/tests/results/#suppressing-300ms-delay */
+a, button, label {
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+}
+
+body {
+    color: rgb(4, 13, 20);
+    font-size: 24px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    line-height: 1.3;
+}
+
+/* Typography. */
+
+h1, h2, h3, h4, h5, h6 {
+    padding: 0;
+    margin: 0;
+    font-weight: 300;
+}
+
+h1 {
+    font-weight: 400;
+    font-size: 2em;
+}
+
+h2 {
+    font-size: 1.75em;
+}
+
+h3 {
+    font-size: 1.5em;
+}
+
+h4 {
+    font-weight: 500;
+}
+
+a:not(.chiclet) {
+    text-decoration: none;
+    border-bottom: 2px dotted rgba(255, 255, 255, 0.7);
+}
+
+a:not(.chiclet):hover {
+    text-decoration: none;
+    border-bottom-style: solid;
+    border-bottom-color: white;
+}
+
+/* Investimize logo. */
+
+img.investimize-logo {
+    content: url(../img/investimize.svg);
+    height: 2em;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+a.investimize-logo {
+    font-family: 'Gudea', sans-serif;
+    background-image: url(../img/investimize.svg);
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: contain;
+    padding-left: 2em;
+    font-weight: bold;
+    color: rgba(0, 199, 67, 1);
+}
+
+/* Header. */
+
+#header {
+}
+
+/* Navigation. */
+
+nav {
+    color: rgb(4, 13, 20);
+}
+
+nav > div:last-child a:hover {
+    border-bottom: 2px solid rgba(4, 13, 20, 0.1);
+}
+
+nav > div:last-child a.active {
+    border-color: rgba(4, 13, 20, 0.6);
+}
+
+/* Hero. */
+
+#hero {
+    padding-top: 6em;
+    padding-bottom: 8em;
+}
+
+#hero h2 {
+    margin-bottom: 1em;
+}
+
+#hero a.chiclet {
+    font-size: 1.25em;
+}
+
+/* Content. */
+
+.row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.row.bar {
+    padding: 6em 6%;
+    position: relative;
+}
+
+.slanted::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 80px;
+    width: 100%;
+    background: white;
+    transform: translateY(-50%) skewY(-1.2deg);
+    transform-origin: 0 0;
+}
+
+.slanted::after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    height: 80px;
+    width: 100%;
+    background: white;
+    transform: translateY(-50%) skewY(-1.2deg);
+    transform-origin: 0 100%;
+}
+
+/* Features */
+
+#features {
+    text-align: center;
+    color: white;
+    background: #007A66;
+    background: -moz-linear-gradient(-45deg,  #00E677 0%, #00E677 100%);
+    background: -webkit-linear-gradient(-45deg,  #00E677 0%,#5A00E0 100%);
+    background: linear-gradient(135deg,  #00E677 0%,#00DBB7 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00E677', endColorstr='#00DBB7',GradientType=1 );
+}
+
+#features img {
+    height: 8em;
+    padding: 1em;
+}
+
+#features > div {
+    padding: 2em 0em;
+}
+
+#features a {
+    color: white;
+}
+
+/* Featured */
+
+#featured, #features::after, #footer::before {
+    background: white;
+}
+
+#featured {
+    padding-top: 10em;
+    padding-bottom: 10em;
+}
+
+/* Footer */
+
+#footer {
+    color: white;
+    background: rgba(0, 0, 10, 0.9);
+    padding-top: 5em;
+    padding-bottom: 3em;
+}
+
+#footer::after {
+    display: none;
+}
+
+#footer a {
+    color: white;
+    border: none;
+}
+
+#footer a:hover {
+    color: #00E677;
+}
+
+#footer a i {
+    width: 32px;
+    text-align: center;
+    margin-right: 15px;
+}
+
+#footer h4 {
+    opacity: 0.5;
+}
+
+#footer > div {
+    padding: 2em 0em;
+}
