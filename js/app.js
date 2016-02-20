@@ -4,8 +4,8 @@ var hero = Vue.extend({
         <div id="hero" class="row"> \
             <div class="col"> \
                 <h1>Investimize</h1> \
-                <h2>Find the best portfolio to invest in.<br> \
-                Grow your wealth or save for your family.</h2> \
+                <h2>Low cost passive investing, \
+                algorithmically optimized to fit your preferences</h2> \
                 <a class="chiclet" v-link="{ path: \'/app\' }">Get my portfolio <i class="fa fa-chevron-circle-right"></i></a>\
             </div> \
         </div> \
