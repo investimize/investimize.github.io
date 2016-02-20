@@ -67,7 +67,6 @@ var hero = Vue.extend({
             </div> \
         </div> \
         </div>'
-
 });
 
 var app = Vue.extend({

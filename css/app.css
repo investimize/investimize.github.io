@@ -109,20 +109,21 @@ a.investimize-logo {
 
 /* Fragment transitions. */
 
-.slide-in-transition #hero {
-    transition: all 1000ms ease;
+.slide-in-transition {
+    position: absolute;
+    transition: all 1s ease;
 }
 
-.slide-in-enter #hero, .slide-in-leave #hero {
+.slide-in-enter, .slide-in-leave {
     opacity: 0;
 }
 
-.slide-in-enter #hero {
-    transform: translateX(-32px);
+.slide-in-enter {
+    transform: translateX(32px);
 }
 
-.slide-in-leave #hero {
-    transform: translateX(32px);
+.slide-in-leave {
+    transform: translateX(-32px);
 }
 
 /* Navigation. */

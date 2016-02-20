@@ -183,12 +183,7 @@ nav > div {
     vertical-align: middle;
 }
 
-nav > div:first-child {
-    padding-left: 2em;
-}
-
 nav > div:last-child {
-    padding-right: 2em;
     text-align: right;
     position: relative;
 }
@@ -226,8 +221,8 @@ nav > div:last-child ul {
 @media only screen and (max-width: 70em) {
 
     nav {
-        padding-left: 0em;
-        padding-right: 0em;
+        padding-left: 2em;
+        padding-right: 2em;
     }
     
     .hamburger {
