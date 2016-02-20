@@ -13,7 +13,6 @@
         
         <!-- TODO: replace `latest` with a specific version. -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/normalize/latest/normalize.min.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/flexboxgrid/latest/flexboxgrid.min.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontawesome/latest/css/font-awesome.min.css">
         <link rel="stylesheet" href="css/components.css">
         <link rel="stylesheet" href="css/app.css">
@@ -23,29 +22,25 @@
 
         <div id="app">
 
-            <div id="header">
+            <nav>
+                <div>
+                    <a v-link="{ path: '/', exact: true }"><img class="investimize-logo"></a>
+                </div>
+                <div>
+                    <input type="checkbox" id="hamburger">
+                    <label for="hamburger" class="hamburger">
+                        <i></i><i></i><i></i><i></i>
+                    </label>
+                    <ul>
+                        <li><a v-link="{ path: '/', exact: true }">Introducing Investimize</a></li>
+                        <li><a v-link="{ path: '/howitworks' }">How it works</a></li>
+                        <li><a v-link="{ path: '/whoweare' }">Who we are</a></li>
+                        <li><a v-link="{ path: '/app' }">Get my portfolio</a></li>
+                    </ul>
+                </div>
+            </nav>
 
-                <nav>
-                    <div>
-                        <a v-link="{ path: '/', exact: true }"><img class="investimize-logo"></a>
-                    </div>
-                    <div>
-                        <input type="checkbox" id="hamburger">
-                        <label for="hamburger" class="hamburger">
-                            <i></i><i></i><i></i><i></i>
-                        </label>
-                        <ul>
-                            <li><a v-link="{ path: '/', exact: true }">Introducing Investimize</a></li>
-                            <li><a v-link="{ path: '/howitworks' }">How it works</a></li>
-                            <li><a v-link="{ path: '/whoweare' }">Who we are</a></li>
-                            <li><a v-link="{ path: '/app' }">Get my portfolio</a></li>
-                        </ul>
-                    </div>
-                </nav>
-
-                <router-view></router-view>
-
-            </div>
+            <router-view></router-view>
 
         </div>
 

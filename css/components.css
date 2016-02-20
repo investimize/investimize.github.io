@@ -87,6 +87,7 @@
     background: #f7f7f7;
     border-radius: 50%;
     position: relative;
+    top: -4px;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
     vertical-align: middle;
     transition: all 200ms ease;
@@ -138,7 +139,7 @@
     transform: translateX(-50%) rotate(-45deg);
 }
 
-/* Material responsive menu. */
+/* Material responsive menu */
 
 nav {
     color: #f7f7f7;
@@ -147,6 +148,8 @@ nav {
     position: relative;
     background: rgba(255, 255, 255, 0);
     z-index: 999;
+    box-sizing: border-box;
+    padding: 1.2em 6%;
 }
 
 nav a {
@@ -178,15 +181,14 @@ nav > div:first-child > a {
 nav > div {
     display: table-cell;
     vertical-align: middle;
-    padding: 1.2em 6%;
 }
 
 nav > div:first-child {
-    padding-right: 0;
+    padding-left: 2em;
 }
 
 nav > div:last-child {
-    padding-left: 0;
+    padding-right: 2em;
     text-align: right;
     position: relative;
 }
@@ -221,10 +223,11 @@ nav > div:last-child ul {
     display: none;
 }
 
-@media only screen and (max-width: 48em) {
-    
-    nav > div {
-        padding: 0.5em 1.4em;
+@media only screen and (max-width: 70em) {
+
+    nav {
+        padding-left: 0em;
+        padding-right: 0em;
     }
     
     .hamburger {
