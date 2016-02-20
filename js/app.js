@@ -1,6 +1,7 @@
 
 var hero = Vue.extend({
     template: ' \
+        <div> \
         <div id="hero" class="row"> \
             <div class="col"> \
                 <h1>Investimize</h1> \
@@ -41,7 +42,7 @@ var hero = Vue.extend({
         <div id="footer" class="slanted row"> \
             <div class="col"> \
                 <div> \
-                <h4>Get it touch with us on</h4> \
+                <h4>Get in touch with us on</h4> \
                 <a href="https://twitter.com/investimize"><i class="fa fa-twitter"></i> Twitter</a><br> \
                 <a href="https://www.facebook.com/investimize"><i class="fa fa-facebook"></i> Facebook</a><br> \
                 <a href="https://plus.google.com/107358769257818283098"><i class="fa fa-google-plus"></i> Google+</a><br> \
@@ -64,6 +65,7 @@ var hero = Vue.extend({
                 <p>Past performance is no guarantee of future results.</p> \
                 </div> \
             </div> \
+        </div> \
         </div>'
 
 });
@@ -82,7 +84,8 @@ var howitworks = Vue.extend({
 
 var router = new VueRouter({
     linkActiveClass: 'active',
-    hashbang: false
+    hashbang: false,
+    transitionOnLoad: true
 });
 
 router.map({
