@@ -127,7 +127,7 @@ Vue.component('investimize-parameters', {
         <tbody id="assetclass" :class="{\'collapsed\': collapsed.content}"> \
         <tr> \
             <th>Asset class</th> \
-            <th><i v-on:click="collapse(\'content\')"></i></th> \
+            <th><div><i v-on:click="collapse(\'content\')"></i></div></th> \
         </tr> \
         <tr v-if="type != \'Real Estate\'" v-for="(type, range) in params.content"> \
             <td><div>{{type}}</div></td> \
@@ -141,7 +141,7 @@ Vue.component('investimize-parameters', {
         <tbody id="region" :class="{\'collapsed\': collapsed.region}"> \
         <tr> \
             <th>Region</th> \
-            <th><i v-on:click="collapse(\'region\')"></i></th> \
+            <th><div><i v-on:click="collapse(\'region\')"></i></div></th> \
         </tr> \
         <tr v-for="(type, range) in params.region"> \
             <td><div>{{type}}</div></td> \
@@ -169,7 +169,7 @@ Vue.component('investimize-parameters', {
         <tbody id="sector" :class="{\'collapsed\': collapsed.advanced}"> \
         <tr> \
             <th>Advanced</th> \
-            <th><i v-on:click="collapse(\'advanced\')"></i></th> \
+            <th><div><i v-on:click="collapse(\'advanced\')"></i></div></th> \
         </tr> \
         <tr> \
             <td><div>Leveraged ETFs</div></td> \
