@@ -63,7 +63,8 @@ Vue.component('investimize-parameters', {
             collapsed: {
                 content: false,
                 region: false,
-                sector: true
+                sector: true,
+                advanced: true
             },
             params: {
                 weight: [0.05, 0.25],
@@ -73,8 +74,8 @@ Vue.component('investimize-parameters', {
                 allow_leveraged: true,
                 content: {
                     'Stocks': [0.0, 1.0],
-                    'Bonds': [0.0, 1.0],
-                    'Cash': [0.0, 1.0],
+                    'Bonds': [0.0, 0.4],
+                    'Cash': [0.0, 0.25],
                     'Commodities': [0.0, 1.0],
                     'Real Estate': [0.0, 1.0]
                 },
@@ -90,11 +91,11 @@ Vue.component('investimize-parameters', {
                     'Utilities': [0.0, 1.0]
                 },
                 region: {
-                    'Asia': [0.0, 1.0],
-                    'Emerging': [0.0, 1.0],
-                    'Europe': [0.0, 1.0],
-                    'North America': [0.0, 1.0],
-                    'Oceania': [0.0, 1.0]
+                    'Asia': [0.0, 0.66],
+                    'Emerging': [0.0, 0.66],
+                    'Europe': [0.1, 1.0],
+                    'North America': [0.2, 1.0],
+                    'Oceania': [0.0, 0.66]
                 },
             }
         };
@@ -106,16 +107,29 @@ Vue.component('investimize-parameters', {
     },
     template: ' \
         <table> \
-        <tr> \
+        <tbody><tr> \
             <th>Return</th> \
-            <th>[input range]</th> \
-        </tr> \
+            <th> \
+                <input-range min="0.02" max="0.15" step="0.005" \
+                    :value.sync="params[\'return\']" \
+                tostring="(100 * x).toFixed(1)+\'%\'"></input-range> \
+            </th> \
+        </tr></tbody> \
+        <tbody><tr> \
+            <th>Weight</th> \
+            <th> \
+                <double-input-range min="0.01" max="0.4" step="0.01" \
+                    :value-min="params.weight[0]" :value-max="params.weight[1]" \
+                    :value.sync="params.weight" \
+                tostring="(100 * x).toFixed(0)+\'%\'"></double-input-range> \
+            </th> \
+        </tr></tbody> \
         <tbody id="assetclass" :class="{\'collapsed\': collapsed.content}"> \
         <tr> \
             <th>Asset class</th> \
             <th><i v-on:click="collapse(\'content\')"></i></th> \
         </tr> \
-        <tr v-for="(type, range) in params.content"> \
+        <tr v-if="type != \'Real Estate\'" v-for="(type, range) in params.content"> \
             <td><div>{{type}}</div></td> \
             <td> \
                 <double-input-range min="0" max="1" step="0.01" \
@@ -151,6 +165,21 @@ Vue.component('investimize-parameters', {
                     :value.sync="params.sector[type]" \
                 tostring="(100 * x).toFixed(0)+\'%\'"></double-input-range> \
             </td> \
+        </tr></tbody> \
+        <tbody id="sector" :class="{\'collapsed\': collapsed.advanced}"> \
+        <tr> \
+            <th>Advanced</th> \
+            <th><i v-on:click="collapse(\'advanced\')"></i></th> \
+        </tr> \
+        <tr> \
+            <td><div>Leveraged ETFs</div></td> \
+            <td></td> \
+        </tr><tr> \
+            <td><div>Short ETFs</div></td> \
+            <td></td> \
+        </tr><tr> \
+            <td><div>Backtesting</div></td> \
+            <td></td> \
         </tr></tbody> \
         </table>'
 });

@@ -356,8 +356,15 @@ nav > div:last-child a.active {
 
 #input table {
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 5px;
+    border-collapse: collapse;
+}
+
+#input tbody {
+    border-top: 1em solid transparent;
+}
+
+#input tr {
+    border-top: 0.25em solid transparent;
 }
 
 #input td, #input th {
@@ -365,10 +372,12 @@ nav > div:last-child a.active {
 }
 
 #input th {
+    font-weight: normal;
+}
+
+#input th:first-child {
     text-align: left;
     font-weight: bold;
-    padding-top: 1em;
-    padding-bottom: 0.2em;
 }
 
 #input td:first-child, #input th:first-child {
@@ -454,4 +463,8 @@ nav > div:last-child a.active {
     vertical-align: middle;
     margin-right: 0.5em;
     margin-bottom: 2em;
+}
+
+#input a.chiclet {
+    margin-top: 2em;
 }
