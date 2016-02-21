@@ -321,7 +321,7 @@ nav > div:last-child a.active {
 
 #input {
     color: white;
-    font-size: 0.9em;
+    font-size: 0.75em;
     box-shadow: 1px 0 3px rgba(0,0,0,0.12), 1px 0 2px rgba(0,0,0,0.24);
     background: #007A66;
     background: -moz-linear-gradient(-45deg, #00E677 0%, #00DBB7 100%);
@@ -356,6 +356,8 @@ nav > div:last-child a.active {
 
 #input table {
     width: 100%;
+    border-collapse: separate;
+    border-spacing: 5px;
 }
 
 #input td, #input th {
@@ -366,10 +368,73 @@ nav > div:last-child a.active {
     text-align: left;
     font-weight: bold;
     padding-top: 1em;
+    padding-bottom: 0.2em;
 }
 
 #input td:first-child, #input th:first-child {
     width: 1%;
+    white-space: nowrap;
+}
+
+#input tbody.collapsed tr:not(:first-child) {
+    display: none;
+}
+
+#input tbody th:last-child {
+    text-align: right;
+}
+
+#input tbody th i {
+    color: rgba(0, 0, 0, 0.5);
+    font-style: normal;
+    font-size: 1em;
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    background: white;
+    border-radius: 50%;
+    position: relative;
+    top: 50%;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    vertical-align: middle;
+    transition: all 200ms ease;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-backface-visibility: hidden; /* Fix 1px shift bug on Chrome. */
+}
+
+#input tbody th i:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
+#input tbody th i::before, #input tbody th i::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    margin-top: -1px;
+    height: 2px;
+    background: #444;
+    border-radius: 2px;
+    transition: all 200ms ease-in-out;
+}
+
+#input tbody th i::before {
+    transform: translateX(-50%) rotate(-45deg);
+}
+
+#input tbody th i::after {
+    transform: translateX(-50%) rotate(45deg);
+}
+
+#input tbody.collapsed th i::before {
+    transform: translateX(-50%);
+}
+
+#input tbody.collapsed th i::after {
+    transform: translateX(-50%) rotate(90deg);
 }
 
 #input a:not(.chiclet) {

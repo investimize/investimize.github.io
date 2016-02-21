@@ -60,7 +60,8 @@ div.input-range > input::-webkit-slider-thumb {
     z-index: 2;
     position: relative;
     box-shadow: 0 2px 6px -3px rgba(0, 0, 0, 0.5);
-    margin-top: -10px; /* Chrome needs to shift the thumb up. */
+    margin-top: -0.5em; /* Chrome needs to shift the thumb up. */
+    transform: translateY(1px); /* Should be 2px because this is half the track, but shadow looks like a pixel. */
 }
 
 @supports (-ms-accelerator:true) {

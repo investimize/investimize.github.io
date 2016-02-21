@@ -19,16 +19,8 @@ Vue.component('nav-bar', {
         </nav>'
 });
 
-// TODO: Right now, input range data is propagated to the parent with $dispatch.
-// Asked if there's a better solution at http://forum.vuejs.org/topic/2342/can-you-use-a-computed-property-as-a-prop
-// If there is, update this.
 Vue.component('input-range', {
     props: ['min', 'max', 'step', 'tostring', 'value'],
-    watch: {
-        value: function() {
-            this.$dispatch('update', this.value);
-        }
-    },
     methods: {
         label: function(x) {
             return eval(this.tostring ? this.tostring : 'x');
@@ -36,22 +28,19 @@ Vue.component('input-range', {
     },
     template: ' \
         <div class="input-range"> \
-            <input v-model="value" min="{{min}}" max="{{max}}" step="{{step}}" type="range"> \
+            <input v-model="value" value="{{value}}" min="{{min}}" max="{{max}}" step="{{step}}" type="range"> \
             <label>{{label(value)}}</label> \
         </div>'
 });
+
 Vue.component('double-input-range', {
-    props: ['min', 'max', 'step', 'tostring', 'valueMin', 'valueMax'],
-    computed: {
-        value: function() {
-            return this.valueMin < this.valueMax ?
+    props: ['min', 'max', 'step', 'tostring', 'valueMin', 'valueMax', 'value'],
+    data: function() { return { value: [NaN, NaN] }; },
+    watch: {
+        '[valueMin,valueMax]': function() {
+            this.value = this.valueMin < this.valueMax ?
                 [this.valueMin, this.valueMax] :
                 [this.valueMax, this.valueMin];
-        },
-    },
-    watch: {
-        value: function() {
-            this.$dispatch('update', this.value);
         }
     },
     methods: {
@@ -62,171 +51,108 @@ Vue.component('double-input-range', {
     template: ' \
         <div class="input-range"> \
             <label>{{label(value[0])}}</label> \
-            <input v-model="valueMin" min="{{min}}" max="{{max}}" step="{{step}}" type="range"> \
-            <input v-model="valueMax" min="{{min}}" max="{{max}}" step="{{step}}" type="range"> \
+            <input v-model="valueMin" value="{{valueMin}}" min="{{min}}" max="{{max}}" step="{{step}}" type="range"> \
+            <input v-model="valueMax" value="{{valueMax}}" min="{{min}}" max="{{max}}" step="{{step}}" type="range"> \
             <label>{{label(value[1])}}</label> \
         </div>'
 });
 
-// All these set* methods should go away once we get a better solution to
-// the problem above.
-// TODO: Can't we use v-for to generate this table? Should be possible...
 Vue.component('investimize-parameters', {
     data: function() {
         return {
-            'weight': [0.05, 0.25],
-            'return': 0.10,
-            'backtest': 0,
-            'allow_short': true,
-            'allow_leveraged': true,
-            'content': {
-                'Stocks': [0.0, 1.0],
-                'Bonds': [0.0, 1.0],
-                'Cash': [0.0, 1.0],
-                'Commodities': [0.0, 1.0],
-                'Real Estate': [0.0, 1.0]
+            collapsed: {
+                content: false,
+                region: false,
+                sector: true
             },
-            'sector': {
-                'Communication Services': [0.0, 1.0],
-                'Consumer Cyclical': [0.0, 1.0],
-                'Consumer Defensive': [0.0, 1.0],
-                'Energy': [0.0, 1.0],
-                'Financial Services': [0.0, 1.0],
-                'Healthcare': [0.0, 1.0],
-                'Industrials': [0.0, 1.0],
-                'Technology': [0.0, 1.0],
-                'Utilities': [0.0, 1.0]
-            },
-            'region': {
-                'Asia': [0.0, 1.0],
-                'Emerging': [0.0, 1.0],
-                'Europe': [0.0, 1.0],
-                'North America': [0.0, 1.0],
-                'Oceania': [0.0, 1.0]
+            params: {
+                weight: [0.05, 0.25],
+                'return': 0.10,
+                backtest: 0,
+                allow_short: true,
+                allow_leveraged: true,
+                content: {
+                    'Stocks': [0.0, 1.0],
+                    'Bonds': [0.0, 1.0],
+                    'Cash': [0.0, 1.0],
+                    'Commodities': [0.0, 1.0],
+                    'Real Estate': [0.0, 1.0]
+                },
+                sector: {
+                    'Communication Services': [0.0, 1.0],
+                    'Consumer Cyclical': [0.0, 1.0],
+                    'Consumer Defensive': [0.0, 1.0],
+                    'Energy': [0.0, 1.0],
+                    'Financial Services': [0.0, 1.0],
+                    'Healthcare': [0.0, 1.0],
+                    'Industrials': [0.0, 1.0],
+                    'Technology': [0.0, 1.0],
+                    'Utilities': [0.0, 1.0]
+                },
+                region: {
+                    'Asia': [0.0, 1.0],
+                    'Emerging': [0.0, 1.0],
+                    'Europe': [0.0, 1.0],
+                    'North America': [0.0, 1.0],
+                    'Oceania': [0.0, 1.0]
+                },
             }
         };
     },
     methods: {
-        setreturn: function(val) { this.return = val; },
-        setstocks: function(val) { this.content.Stocks = val; },
-        setbonds: function(val) { this.content.Bonds = val; },
-        setcash: function(val) { this.content.Cash = val; },
-        setcommodities: function(val) { this.content.Commodities = val; },
-        setrealestate: function(val) { this.content['Real Estate'] = val; },
-        setasia: function(val) { this.region.Asia = val; },
-        setemerging: function(val) { this.region.Emerging = val; },
-        seteurope: function(val) { this.region.Europe = val; },
-        setnorthamerica: function(val) { this.region['North America'] = val; },
-        setoceania: function(val) { this.region.Oceania = val; },
-        setcommunicationservices: function(val) { this.sector['Communication Services'] = val; }
+        collapse: function(section) {
+            this.collapsed[section] = !this.collapsed[section];
+        }
     },
     template: ' \
         <table> \
         <tr> \
-        <td>Return</td> \
-        <td><input-range min="0.01" max="0.15" step="0.005" \
-            :value.once="this[\'return\']" \
-            tostring="(100 * x).toFixed(1)+\'%\'" \
-            v-on:update="setreturn"> \
-        </input-range></td> \
+            <th>Return</th> \
+            <th>[input range]</th> \
         </tr> \
-        </table> \
-        <table> \
-        <tr><th colspan="2">Asset class</th></tr> \
+        <tbody id="assetclass" :class="{\'collapsed\': collapsed.content}"> \
         <tr> \
-        <td>Stocks</td> \
-        <td><double-input-range min="0" max="1" step="0.01" \
-            :value-min.once="this.content.Stocks[0]" \
-            :value-max.once="this.content.Stocks[1]" \
-            tostring="(100 * x).toFixed(0)+\'%\'" \
-            v-on:update="setstocks"> \
-        </double-input-range></td> \
+            <th>Asset class</th> \
+            <th><i v-on:click="collapse(\'content\')"></i></th> \
         </tr> \
+        <tr v-for="(type, range) in params.content"> \
+            <td><div>{{type}}</div></td> \
+            <td> \
+                <double-input-range min="0" max="1" step="0.01" \
+                    :value-min="range[0]" :value-max="range[1]" \
+                    :value.sync="params.content[type]" \
+                tostring="(100 * x).toFixed(0)+\'%\'"></double-input-range> \
+            </td> \
+        </tr></tbody> \
+        <tbody id="region" :class="{\'collapsed\': collapsed.region}"> \
         <tr> \
-        <td>Bonds</td> \
-        <td><double-input-range min="0" max="1" step="0.01" \
-            :value-min.once="this.content.Bonds[0]" \
-            :value-max.once="this.content.Bonds[1]" \
-            tostring="(100 * x).toFixed(0)+\'%\'" \
-            v-on:update="setbonds"> \
-        </double-input-range></td> \
+            <th>Region</th> \
+            <th><i v-on:click="collapse(\'region\')"></i></th> \
         </tr> \
+        <tr v-for="(type, range) in params.region"> \
+            <td><div>{{type}}</div></td> \
+            <td> \
+                <double-input-range min="0" max="1" step="0.01" \
+                    :value-min="range[0]" :value-max="range[1]" \
+                    :value.sync="params.region[type]" \
+                tostring="(100 * x).toFixed(0)+\'%\'"></double-input-range> \
+            </td> \
+        </tr></tbody> \
+        <tbody id="sector" :class="{\'collapsed\': collapsed.sector}"> \
         <tr> \
-        <td>Cash</td> \
-        <td><double-input-range min="0" max="1" step="0.01" \
-            :value-min.once="this.content.Cash[0]" \
-            :value-max.once="this.content.Cash[1]" \
-            tostring="(100 * x).toFixed(0)+\'%\'" \
-            v-on:update="setcash"> \
-        </double-input-range></td> \
+            <th>Sector</th> \
+            <th><i v-on:click="collapse(\'sector\')"></i></th> \
         </tr> \
-        <tr> \
-        <td>Commodities</td> \
-        <td><double-input-range min="0" max="1" step="0.01" \
-            :value-min.once="this.content.Commodities[0]" \
-            :value-max.once="this.content.Commodities[1]" \
-            tostring="(100 * x).toFixed(0)+\'%\'" \
-            v-on:update="setcommodities"> \
-        </double-input-range></td> \
-        </tr> \
-        <tr><th colspan="2">Region</th></tr> \
-        <tr> \
-        <td>Asia</td> \
-        <td><double-input-range min="0" max="1" step="0.01" \
-            :value-min.once="this.region.Asia[0]" \
-            :value-max.once="this.region.Asia[1]" \
-            tostring="(100 * x).toFixed(0)+\'%\'" \
-            v-on:update="setasia"> \
-        </double-input-range></td> \
-        </tr> \
-        <tr> \
-        <td>Emerging</td> \
-        <td><double-input-range min="0" max="1" step="0.01" \
-            :value-min.once="this.region.Emerging[0]" \
-            :value-max.once="this.region.Emerging[1]" \
-            tostring="(100 * x).toFixed(0)+\'%\'" \
-            v-on:update="setemerging"> \
-        </double-input-range></td> \
-        </tr> \
-        <tr> \
-        <td>Europe</td> \
-        <td><double-input-range min="0" max="1" step="0.01" \
-            :value-min.once="this.region.Europe[0]" \
-            :value-max.once="this.region.Europe[1]" \
-            tostring="(100 * x).toFixed(0)+\'%\'" \
-            v-on:update="seteurope"> \
-        </double-input-range></td> \
-        </tr> \
-        <tr> \
-        <td>North&nbsp;America</td> \
-        <td><double-input-range min="0" max="1" step="0.01" \
-            :value-min.once="this.region[\'North America\'][0]" \
-            :value-max.once="this.region[\'North America\'][1]" \
-            tostring="(100 * x).toFixed(0)+\'%\'" \
-            v-on:update="setnorthamerica"> \
-        </double-input-range></td> \
-        </tr> \
-        <tr> \
-        <td>Oceania</td> \
-        <td><double-input-range min="0" max="1" step="0.01" \
-            :value-min.once="this.region.Oceania[0]" \
-            :value-max.once="this.region.Oceania[1]" \
-            tostring="(100 * x).toFixed(0)+\'%\'" \
-            v-on:update="setoceania"> \
-        </double-input-range></td> \
-        </tr> \
-        <tr><th colspan="2">Sector</th></tr> \
-        <tr> \
-        <td>Communication Services</td> \
-        <td><double-input-range min="0" max="1" step="0.01" \
-            :value-min.once="this.sector[\'Communication Services\'][0]" \
-            :value-max.once="this.sector[\'Communication Services\'][1]" \
-            tostring="(100 * x).toFixed(0)+\'%\'" \
-            v-on:update="setcommunicationservices"> \
-        </double-input-range></td> \
-        </tr> \
-        </table> \
-        <a href="#" class="chiclet">Update <i class="fa fa-chevron-circle-right"></i></a>'
+        <tr v-for="(type, range) in params.sector"> \
+            <td><div>{{type.replace(\' Services\', \'\')}}</div></td> \
+            <td> \
+                <double-input-range min="0" max="1" step="0.01" \
+                    :value-min="range[0]" :value-max="range[1]" \
+                    :value.sync="params.sector[type]" \
+                tostring="(100 * x).toFixed(0)+\'%\'"></double-input-range> \
+            </td> \
+        </tr></tbody> \
+        </table>'
 });
 
 var app = Vue.extend({
@@ -237,6 +163,7 @@ var app = Vue.extend({
                     <img> \
                 </a><br> \
                 <investimize-parameters></investimize-parameters> \
+                <a href="#" class="chiclet">Update <i class="fa fa-chevron-circle-right"></i></a> \
             </div> \
             <div id="output"></div> \
         </div>'
