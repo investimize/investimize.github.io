@@ -29,9 +29,15 @@ a, button, label {
     .row { width: 100%; display: table; table-layout: fixed; }
     .col { display: table-cell; }
     .row {
-        padding: 9% 6%;
+        padding-left: 6%;
+        padding-right: 6%;
         border-spacing: 2em 3.5em;
     }
+}
+
+.vue-wrapper {
+    height: 100%;
+    width: 100%;
 }
 
 /* Typography. */
@@ -94,17 +100,6 @@ img.investimize-logo {
 
 img.investimize-logo path {
     fill: red;
-}
-
-a.investimize-logo {
-    font-family: 'Gudea', sans-serif;
-    background-image: url(../img/investimize_green.svg);
-    background-repeat: no-repeat;
-    background-position: left top;
-    background-size: contain;
-    padding-left: 2em;
-    font-weight: bold;
-    color: rgba(0, 199, 67, 1);
 }
 
 /* Fragment transitions. */
@@ -252,6 +247,10 @@ nav > div:last-child a.active {
     margin-bottom: 0.75em;
 }
 
+#features p {
+    text-align: left;
+}
+
 #features a {
     color: white;
     border-color: rgba(255, 255, 255, 0.5);
@@ -312,4 +311,82 @@ nav > div:last-child a.active {
     font-size: 0.75em;
     margin-bottom: 0;
     max-width: 15em;
+}
+
+/* Input and output. */
+
+#input, #output {
+    padding: 1em;
+}
+
+#input {
+    color: white;
+    font-size: 0.9em;
+    box-shadow: 1px 0 3px rgba(0,0,0,0.12), 1px 0 2px rgba(0,0,0,0.24);
+    background: #007A66;
+    background: -moz-linear-gradient(-45deg, #00E677 0%, #00DBB7 100%);
+    background: -webkit-linear-gradient(-45deg, #00E677 0%, #00DBB7 100%);
+    background: linear-gradient(135deg, #00E677 0%, #00DBB7 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00E677',endColorstr='#00DBB7',GradientType=1);
+}
+
+@media (min-width: 50em) {
+
+    #input, #output {
+        position: absolute;
+        box-sizing: border-box;
+    }
+
+    #output {
+        left: 400px;
+        bottom: 0;
+        right: 0;
+        top: 0;
+        overflow-y: auto;
+    }
+
+    #input {
+        color: white;
+        width: 400px;
+        height: 100%;
+        overflow-y: auto;
+    }
+
+}
+
+#input table {
+    width: 100%;
+}
+
+#input td, #input th {
+    position: relative;
+}
+
+#input th {
+    text-align: left;
+    font-weight: bold;
+    padding-top: 1em;
+}
+
+#input td:first-child, #input th:first-child {
+    width: 1%;
+}
+
+#input a:not(.chiclet) {
+    color: white;
+    border: 0;
+}
+
+#input a.investimize-logo {
+    font-size: 1.25em;
+    padding: 0;
+}
+
+#input a.investimize-logo img {
+    content: url(../img/investimize_white.svg);
+    height: 1.5em;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 0.5em;
+    margin-bottom: 2em;
 }
