@@ -293,15 +293,14 @@ Vue.component('vis-graph', {
                 x_accessor: 'date',
                 y_accessor: 'value',
                 yax_units: '€',
-                height: 400,
-                // width: this.$el.offsetWidth,
+                height: 350,
                 full_width: true,
                 aggregate_rollover: false,
                 mouseover: function(d, i) {
                     var value_format = locale.numberFormat('$n');
                     var prefix = d3.formatPrefix(d.value);
                     d3.select('#graph svg .mg-active-datapoint').text(
-                        this.legend[d.line_id - 1] + '  -  ' +
+                        this.legend[d.line_id - 1] + '  —  ' +
                         date_format(d.date) + '   ' +
                         value_format(Math.round(100 * Math.round(d.value / 100))));
                 }
@@ -323,7 +322,7 @@ Vue.component('vis-graph', {
             this.drawChart();
         }
     },
-    template: '<div id="graph"></div><div id="legend" style="display:none"></div>'
+    template: '<div id="graph"></div>'
 });
 
 Vue.component('vis-table', {
@@ -348,9 +347,6 @@ Vue.component('vis-table', {
     template: '\
             <table id="portfolio"> \
                 <thead> \
-                    <tr><th colspan="3"> \
-                        <a href="{{ solution.xray }}">X-ray</a> \
-                    </th></tr> \
                     <tr> \
                         <th></th> \
                         <th>Amount</th> \
@@ -428,9 +424,6 @@ var app = Vue.extend({
         };
     },
     methods: {
-        stringify: function(val) {
-                return JSON.stringify(val);
-            },
         fetchPortfolio: function() {
             this.$http.post('portfolio?verbose=true', this.params).then(function(response) {
                 this.solution = response.data;
