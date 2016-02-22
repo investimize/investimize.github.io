@@ -211,91 +211,87 @@ Vue.component('vis-graph', {
             }
         };
     },
-    methods: {
-        refreshBenchmarkData: function() {
-            var benchmarkCurves = [];
-            var invested = this.invested;
-            this.benchmarks.forEach(function(benchmarkCurve) {
-              var benchmarkCurve = d3.zip(benchmarkCurve.timeseries.date, benchmarkCurve.timeseries.price).map(function(arr) {
-                  var obj = {};
-                  obj.date = new Date(arr[0]);
-                  obj.value = invested * arr[1];
-                  return obj;
-              });
-              benchmarkCurves.push(benchmarkCurve);
-            }, this);
-            this.chartData.benchmarkCurves = benchmarkCurves;
-        },
-        refreshPortfolioData: function() {
-            // TODO: check if solution is not an empty object
-            /*
-            var date = this.solution.portfolio[0].timeseries.date.map(
-                function(date) { return new Date(date); });
-            var invested = this.invested;
-            var price = d3.zip.apply(null, this.solution.portfolio.map(
-                function(etf) {
-                    return etf.timeseries.price.map(function(price) {
-                        return invested * etf.weight * price;
-                    });
-                })).map(function(prices) { return d3.sum(prices); });
-            var growth = d3.zip(date, price).map(
-                function(datum) {
-                    return {date: datum[0], value: datum[1]};
+    computed: {
+        benchmarkCurves: function() {
+            return this.benchmarks.map(
+                function(benchmark) {
+                    return d3.zip(benchmark.timeseries.date,
+                        benchmark.timeseries.price).map(
+                        function(arr) {
+                            return {date: new Date(arr[0]), value: arr[1]};
+                        });
                 });
-            return growth;
-            */
-            
-          var nDataPoints = this.solution.portfolio[0].timeseries.date.length;
-          var invested = this.invested;
-          
-          var etfSeries = [];
-          var legend = [];
-          var cumulativeSeries = Array.apply(null, Array(nDataPoints)).map(Number.prototype.valueOf,0); // init with zeros
-          this.solution.portfolio.forEach(function(etf) {
-            var isin = etf.isin;
-            
-            // building the cumulative timeseries
-            cumulativeSeries = cumulativeSeries.map(function (num, idx) {
-                return num + (invested * etf.weight * etf.timeseries.price[idx]);
-            });
-
-            var cumulativeSeriesWithDates = d3.zip(etf.timeseries.date, cumulativeSeries).map(function(arr) {
-              var obj = {};
-              obj.date = new Date(arr[0]);
-              obj.value = arr[1];
-              return obj;
-            });
-            legend.push(isin);
-            etfSeries.push(cumulativeSeriesWithDates);
-          });
-          
-          var chartData = {
-            etfSeries: etfSeries,
-            legend: legend
-          };
-          
-          this.chartData.etfCurves = etfSeries;
-          this.chartData.portfolioCurve = etfSeries[etfSeries.length - 1];
-          //this.chartData.legend = legend;
         },
+        benchmarkCurvesInvested: function() {
+            var invested = this.invested;
+            return this.benchmarkCurves.map(
+                function(benchmarkCurve) {
+                    return benchmarkCurve.map(
+                        function(datum) {
+                            return {date: datum.date, value: invested * datum.value};
+                        });
+                });
+        },
+        etfCurves: function() {
+            return this.solution.portfolio.map(
+                function(etf) {
+                    return d3.zip(etf.timeseries.date,
+                        etf.timeseries.price).map(
+                        function(arr) {
+                            return {date: new Date(arr[0]), value: etf.weight * arr[1]};
+                        });
+                });
+        },
+        etfCurvesInvested: function() {
+            var invested = this.invested;
+            return this.etfCurves.map(
+                function(etfCurve) {
+                    return etfCurve.map(
+                        function(datum) {
+                            return {date: datum.date, value: invested * datum.value};
+                        });
+                });
+        },
+        portfolioCurveInvested: function() {
+            var dates = this.etfCurvesInvested[0].map(
+                    function(datum) {
+                        return datum.date;
+                    });
+            var prices = this.etfCurvesInvested.map(
+                function(etfCurveInvested) {
+                    return etfCurveInvested.map(
+                        function(datum) {
+                            return datum.value;
+                        });
+                });
+            prices = d3.zip.apply(null, prices).map(
+                function(prices) {
+                    return d3.sum(prices);
+                });
+            return d3.zip(dates, prices).map(
+                function(arr) {
+                    return {date: arr[0], value: arr[1]};
+                });
+        }
+    },
+    methods: {
         drawChart: function() {
             var date_format = d3.time.format("%B %Y");
             var value_format = locale.numberFormat('$n');
             MG.data_graphic({
-                // data: this.chartData.etfCurves,
-                // legend: this.chartData.legend,
-                // data: [].concat.apply([], this.chartData.benchmarkCurves),
-                data: [this.chartData.portfolioCurve, this.chartData.benchmarkCurves[0]],
+                data: [this.portfolioCurveInvested ? this.portfolioCurveInvested : [], this.benchmarkCurvesInvested[0]],
                 legend: ['Portfolio', 'MSCI World'],
-                legend_target: '#legend',
-                description: 'This is the graph.',
+                show_tooltips: false,
                 target: '#graph',
                 x_accessor: 'date',
                 y_accessor: 'value',
                 yax_units: '€',
                 height: 350,
+                top: 40,
+                right: 75,
                 full_width: true,
-                aggregate_rollover: false,
+                aggregate_rollover: false, // TODO: set this to true and rewrite mouseover
+                markers: [{'date': new Date('2009-03-31'), 'label': 'Trough of the 2008 crisis'}],
                 mouseover: function(d, i) {
                     var value_format = locale.numberFormat('$n');
                     var prefix = d3.formatPrefix(d.value);
@@ -308,17 +304,13 @@ Vue.component('vis-graph', {
         }
     },
     watch: {
-        'solution': function() {
-            this.refreshPortfolioData();
+        solution: function() {
             this.drawChart();
         },
-        'benchmarks': function() {
-            this.refreshBenchmarkData();
+        benchmarks: function() {
             this.drawChart();
         },
-        'invested': function() {
-            this.refreshPortfolioData();
-            this.refreshBenchmarkData();
+        invested: function() {
             this.drawChart();
         }
     },
@@ -480,11 +472,7 @@ var app = Vue.extend({
         };
     },
     methods: {
-        stringify: function(val) {
-                return JSON.stringify(val);
-            },
         convertAnswersToParams: function(answers) {
-            console.log(answers);
             var age = 24;
             if (answers.hasOwnProperty('age')) {
                 age = answers.targetReturn < 20 ? 20 : 65;
@@ -547,9 +535,9 @@ var app = Vue.extend({
                         <h1>Historical performance</h1> \
                         <vis-graph :solution="solution" :invested="invested" :benchmarks="benchmarks"></vis-graph> \
                     </div> \
-                    <div class="vis-col"> \
+                    <!--<div class="vis-col"> \
                         <h1>Portfolio contents</h1> \
-                    </div> \
+                    </div>--> \
                 </div> \
                 <h1>Your portfolio</h1> \
                 <vis-table :solution="solution" :invested="invested"></vis-table> \

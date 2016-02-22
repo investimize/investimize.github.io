@@ -482,12 +482,12 @@ nav > div:last-child a.active {
 
 /* Output. */
 
-#output td:nth-child(2), #output th:nth-child(2) {
+#portfolio td:nth-child(2), #portfolio th:nth-child(2) {
     display: none;
 }
 
 #output {
-    padding: 2em 1em;
+    padding: 1.5em 1em;
     box-sizing: border-box;
     font-size: 0.7em;
 }
@@ -495,15 +495,11 @@ nav > div:last-child a.active {
 #output h1 {
     font-size: 1.4em;
     display: inline-block;
-    /*color: white;*/
     color: rgba(20, 0, 0, 0.2);
-    /*background: rgba(0, 220, 183, 1);*/
-    border-radius: 4px;
-    padding: 3px 6px;
 }
 
-#output .vis-col:last-child h1, #output .vis-row + h1 {
-    margin-top: 1.5em;
+#output .vis-col:last-child:not(:first-child) h1, #output .vis-row + h1 {
+    margin-top: 1em;
 }
 
 #output .vis-row + h1 {
@@ -513,11 +509,11 @@ nav > div:last-child a.active {
 @media (min-width: 50em) {
 
     #output {
-        padding: 2.5em 2em;
+        padding: 3em 3em;
     }
 
-    .vis-col h1 {
-        margin-top: 0 !important;
+    #output .vis-col:last-child:not(:first-child) h1, #output .vis-row + h1 {
+        margin-top: 1.5em;
     }
 
 }
@@ -534,12 +530,12 @@ nav > div:last-child a.active {
         display: table-cell;
     }
 
-    .vis-col:last-child {
+    .vis-col:last-child:not(:first-child) {
         width: 40%;
         text-align: right;
     }
 
-    #output td:nth-child(2), #output th:nth-child(2) {
+    #portfolio td:nth-child(2), #portfolio th:nth-child(2) {
         display: table-cell;
     }
 
