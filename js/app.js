@@ -383,6 +383,62 @@ Vue.component('vis-table', {
           </table>'
 });
 
+Vue.component('questions', {
+    data: function() {
+        return {
+            currentQuestion: 1,
+            lastQuestion: 3,
+            answers: {
+                age: 24,
+                plan: 'rich',
+                targetReturn: 0.15,
+                other: 100,
+            }
+        };
+    },
+    methods: {
+        nextQuestion: function() {
+            if (this.currentQuestion < this.lastQuestion) {
+                this.currentQuestion = this.currentQuestion + 1;
+            } else {
+                this.$router.go({ path: 'app', query: this.answers });
+            }
+        },
+        convertAnswersToParams: function () {
+            console.log(this.params);
+            // this.params['return'] = this.answers.targetReturn;
+        }
+    },
+    template: ' \
+            <div v-show="currentQuestion == 1"> \
+                <h4>I am <input type="text" size="2" v-model="answers.age"> years old and plan to \
+                <select v-model="answers.plan"> \
+                  <option value="rich">become rich</option> \
+                  <option value="marry">marry</option> \
+                  <option value="retire">retire</option> \
+                </select></h4> \
+                <a class="chiclet nofocus" v-on:click="nextQuestion()">Next<i class="fa fa-chevron-circle-right"></i></a>\ \
+            </div> \
+            <div v-show="currentQuestion == 2"> \
+                <h4>What is your target return?</h4> \
+                <input type="text" size="2" v-model="answers.targetReturn"> \
+                <a class="chiclet nofocus" v-on:click="nextQuestion()">Next<i class="fa fa-chevron-circle-right"></i></a>\ \
+            </div> \
+            <div v-show="currentQuestion == 3"> \
+                <h4>A third question?</h4> \
+                <input type="text" size="3" v-model="answers.other"> \
+                <a class="chiclet nofocus" v-on:click="nextQuestion()">Next<i class="fa fa-chevron-circle-right"></i></a>\ \
+            </div> \
+            <span>{{ answers | json }}</span> \
+            <span>{{ params | json }}</span>'
+            
+            /*
+            <input-range min="0.02" max="0.15" step="0.005" \
+                    :value.sync="answers.targetReturn" \
+                tostring="(100 * x).toFixed(1)+\'%\'"></input-range> \
+            */
+});
+
 var app = Vue.extend({
     http: {
         root: 'http://startup-master-mqxgysywwr.elasticbeanstalk.com/api/v0.1' // API root
@@ -431,6 +487,23 @@ var app = Vue.extend({
         stringify: function(val) {
                 return JSON.stringify(val);
             },
+        convertAnswersToParams: function(answers) {
+            console.log(answers);
+            var age = 24;
+            if (answers.hasOwnProperty('age')) {
+                age = answers.targetReturn < 20 ? 20 : 65;
+            }
+            if (answers.hasOwnProperty('plan')) {
+                if (answers.plan === 'rich' || answers.plan === 'retire') {
+                    this.params.content.Stocks[1] = -0.85/45*(age - 65);
+                } else if (answers.plan === 'marry') {
+                    this.params.content.Stocks[1] = 0.45;
+                }
+            }
+            if (answers.hasOwnProperty('targetReturn')) {
+                this.params.return = parseFloat(answers.targetReturn);
+            }
+        },
         fetchPortfolio: function() {
             this.$http.post('portfolio?verbose=true', this.params).then(function(response) {
                 this.solution = response.data;
@@ -453,7 +526,10 @@ var app = Vue.extend({
             //console.log(this.benchmarks);
         }
     },
-    ready: function () {     
+    ready: function () {
+        // load the url params
+        this.convertAnswersToParams(this.$route.query);
+        
         // load the benchmarks
         this.fetchBenchmarks();
         
@@ -494,7 +570,9 @@ var landing = Vue.extend({
                 <h1>Investimize</h1> \
                 <h2>Low cost passive investing, \
                 algorithmically optimized to fit your preferences</h2> \
-                <a class="chiclet nofocus" v-link="{ path: \'/app\' }">Get my portfolio <i class="fa fa-chevron-circle-right"></i></a>\
+            </div> \
+            <div class="col"> \
+                <questions></questions> \
             </div> \
         </div> \
         <div id="features" class="slanted row"> \
