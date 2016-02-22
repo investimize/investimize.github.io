@@ -270,9 +270,9 @@ Vue.component('vis-graph', {
             MG.data_graphic({
                 // data: this.chartData.etfCurves,
                 // legend: this.chartData.legend,
-                // legend_target: '#legend',
                 data: [this.chartData.portfolioCurve, this.chartData.benchmarkCurves[0]],                
-                // data: this.chartData.portfolioCurve,
+                legend: ['Portfolio', 'MSCI World'],
+                legend_target: '#legend',
                 description: 'This is the graph.',
                 target: '#graph',
                 x_accessor: 'date',
@@ -281,10 +281,12 @@ Vue.component('vis-graph', {
                 height: 400,
                 // width: this.$el.offsetWidth,
                 full_width: true,
+                aggregate_rollover: false,
                 mouseover: function(d, i) {
                     var value_format = locale.numberFormat('$n');
                     var prefix = d3.formatPrefix(d.value);
                     d3.select('#graph svg .mg-active-datapoint').text(
+                        this.legend[d.line_id - 1] + '  -  ' +
                         date_format(d.date) + '   ' +
                         value_format(Math.round(100 * Math.round(d.value / 100))));
                 }
