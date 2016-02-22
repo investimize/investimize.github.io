@@ -104,7 +104,7 @@ Vue.component('investimize-parameters', {
             <th><span class="hint-right"> \
                 Weight \
                 <i class="fa fa-question-circle"></i> \
-                <span>The minimum and maximum weight of an ETF in your portfolio.</span> \
+                <span>The minimum and maximum percentage of an ETF in your portfolio.</span> \
             </span></th> \
             <th> \
                 <double-input-range min="0.01" max="0.4" step="0.01" \
@@ -136,7 +136,7 @@ Vue.component('investimize-parameters', {
             <th><span class="hint-right"> \
                 Region \
                 <i class="fa fa-question-circle"></i> \
-                <span>The minimum and maximum weight of a geographical region in your portfolio.</span> \
+                <span>The minimum and maximum percentage of a geographical region in your portfolio.</span> \
             </span></th> \
             <th><div><a v-on:click="collapse(\'region\')"></a></div></th> \
         </tr> \
@@ -154,7 +154,7 @@ Vue.component('investimize-parameters', {
             <th><span class="hint-right"> \
                 Sector \
                 <i class="fa fa-question-circle"></i> \
-                <span>The minimum and maximum weight of an industry sector such as Healthcare in your portfolio.</span> \
+                <span>The minimum and maximum percentage of an industry sector such as Healthcare in your portfolio.</span> \
             </span></th> \
             <th><a v-on:click="collapse(\'sector\')"></a></th> \
         </tr> \
@@ -228,7 +228,7 @@ Vue.component('vis-graph', {
                 x_accessor: 'date',
                 y_accessor: 'value',
                 yax_units: '€',
-                height: 400,
+                height: 350,
                 width: this.$el.offsetWidth,
                 mouseover: function(d, i) {
                     d3.select('#graph svg .mg-active-datapoint').text(
@@ -377,7 +377,7 @@ var app = Vue.extend({
             }
     },
     template: ' \
-        <div class="vue-wrapper"> \
+        <div id="product" class="vue-wrapper"> \
             <div id="input"> \
                 <a style="display:none" class="investimize-logo" v-link="{ path: \'/\', exact: true }"> \
                     <img>\
@@ -388,18 +388,22 @@ var app = Vue.extend({
             <div id="output"> \
                 <div class="vis-row"> \
                     <div class="vis-col"> \
+                        <h1>Historical performance</h1> \
                         <vis-graph :solution="solution" :invested="invested"></vis-graph> \
                     </div> \
-                    <div class="vis-col">Bar</div> \
+                    <div class="vis-col"> \
+                        <h1>Portfolio contents</h1> \
+                    </div> \
                 </div> \
+                <h1>Your portfolio</h1> \
                 <vis-table :solution="solution" :invested="invested"></vis-table> \
             </div> \
         </div>'
 });
 
-var hero = Vue.extend({
+var landing = Vue.extend({
     template: ' \
-        <div class="vue-wrapper"> \
+        <div id="landing" class="vue-wrapper"> \
         <nav-bar></nav-bar> \
         <div id="hero" class="row"> \
             <div class="col"> \
@@ -484,7 +488,7 @@ var router = new VueRouter({
 
 router.map({
     '/': {
-        component: hero
+        component: landing
     },
     '/app': {
         component: app

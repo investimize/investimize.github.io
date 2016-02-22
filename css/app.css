@@ -50,7 +50,7 @@ body {
     line-height: 1.3;
 }
 @media (max-width: 450px) { /* <= iPhone 6+ */
-    body {
+    #landing {
         font-size: 18px;
     }
 }
@@ -309,6 +309,12 @@ nav > div:last-child a.active {
 
 /* Input. */
 
+@media (max-width: 320px) { /* <= iPhone 5 */
+    #product {
+        font-size: 22px;
+    }
+}
+
 #input {
     padding: 1em;
     box-sizing: border-box;
@@ -485,9 +491,17 @@ nav > div:last-child a.active {
 }
 
 #output {
-    padding: 2em;
+    padding: 1em;
     box-sizing: border-box;
     font-size: 0.7em;
+}
+
+@media (min-width: 50em) {
+
+    #output {
+        padding: 2em;
+    }
+
 }
 
 @media (min-width: 70em) {
@@ -519,7 +533,7 @@ nav > div:last-child a.active {
 }
 
 #portfolio tr:hover td {
-    background: rgba(4, 13, 20, 0.04);
+    background: rgba(4, 13, 20, 0.06);
 }
 
 #portfolio th {
@@ -591,4 +605,8 @@ nav > div:last-child a.active {
 
 #portfolio a:hover {
     text-decoration: underline;
+}
+
+#output h1 {
+    display: none;
 }
