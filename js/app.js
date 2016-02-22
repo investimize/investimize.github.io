@@ -555,7 +555,7 @@ var landing = Vue.extend({
                 <h2>Low cost passive investing, \
                 algorithmically optimized to fit your preferences</h2> \
             </div> \
-            <div class="col"> \
+            <div class="col" style="display:none"> \
                 <questions></questions> \
             </div> \
         </div> \
