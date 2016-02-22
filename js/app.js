@@ -213,6 +213,7 @@ Vue.component('vis-graph', {
     },
     methods: {
         refreshBenchmarkData: function() {
+            this.chartData.benchmarkCurves = [];
             var invested = this.invested;
             this.benchmarks.forEach(function(benchmarkCurve) {
               var benchmarkCurve = d3.zip(benchmarkCurve.timeseries.date, benchmarkCurve.timeseries.price).map(function(arr) {
@@ -256,6 +257,27 @@ Vue.component('vis-graph', {
             cumulativeSeries = cumulativeSeries.map(function (num, idx) {
                 return num + (invested * etf.weight * etf.timeseries.price[idx]);
             });
+
+            var cumulativeSeriesWithDates = d3.zip(etf.timeseries.date, cumulativeSeries).map(function(arr) {
+              var obj = {};
+              obj.date = new Date(arr[0]);
+              obj.value = arr[1];
+              return obj;
+            });
+            legend.push(isin);
+            etfSeries.push(cumulativeSeriesWithDates);
+          });
+          
+          var chartData = {
+            etfSeries: etfSeries,
+            legend: legend
+          };
+          
+          this.chartData.etfCurves = etfSeries;
+          this.chartData.portfolioCurve = etfSeries[etfSeries.length - 1];
+          //this.chartData.legend = legend;
+        },
+        drawChart: function() {
             var date_format = d3.time.format("%B %Y");
             var value_format = locale.numberFormat('$n');
             MG.data_graphic({
@@ -305,15 +327,16 @@ Vue.component('vis-graph', {
     watch: {
         'solution': function() {
             this.refreshPortfolioData();
+            this.drawChart();
         },
         'benchmarks': function() {
             this.refreshBenchmarkData();
+            this.drawChart();
         },
-        'chartData.portfolioCurve': {
-            handler: function() {
-                this.drawChart();
-            },
-            deep: true
+        'invested': function() {
+            this.refreshPortfolioData();
+            this.refreshBenchmarkData();
+            this.drawChart();
         }
     },
     template: '<div id="graph"></div><div id="legend" style="display:none"></div>'
@@ -454,19 +477,19 @@ var app = Vue.extend({
         this.fetchPortfolio();    
     },
     template: ' \
-        <div class="vue-wrapper"> \
+        <div id="product" class="vue-wrapper"> \
             <div id="input"> \
                 <a style="display:none" class="investimize-logo" v-link="{ path: \'/\', exact: true }"> \
                     <img>\
                 </a> \
-                <investimize-parameters :params.sync="params"></investimize-parameters> \
+                <investimize-parameters :params.sync="params" :invested.sync="invested"></investimize-parameters> \
                 <a href="#" class="chiclet" onclick="return false" v-on:click="fetchPortfolio()">Update <i class="fa fa-chevron-circle-right"></i></a> \
             </div> \
             <div id="output"> \
                 <div class="vis-row"> \
                     <div class="vis-col"> \
                         <h1>Historical performance</h1> \
-                        <vis-graph :solution="solution" :invested="invested"></vis-graph> \
+                        <vis-graph :solution="solution" :invested="invested" :benchmarks="benchmarks"></vis-graph> \
                     </div> \
                     <div class="vis-col"> \
                         <h1>Portfolio contents</h1> \
