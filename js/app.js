@@ -174,28 +174,83 @@ Vue.component('investimize-parameters', {
 });
 
 Vue.component('vis-graph', {
-    props: ['solution'],
+    props: ['solution', 'benchmarks'],
     data: function() {
         return {
-            invested: 10000
+            invested: 10000,
+            chartData: {
+                portfolioCurve: [],
+                etfCurves: [],
+                benchmarkCurves: []
+            }
         };
     },
     methods: {
-        drawChart: function(x) {
-            var chartData = [], chartLegend = [];
-            this.solution.portfolio.forEach(function(etf) {
-                var isin = etf.isin;
-                var series = etf.timeseries;
-                series = d3.zip(series.date, series.price).map(
-                    function(arr) {
-                        var obj = {};
-                        obj.date = new Date(arr[0]);
-                        obj.value = etf.weight * arr[1];
-                        return obj;
+        refreshBenchmarkData: function() {
+            var invested = this.invested;
+            this.benchmarks.forEach(function(benchmarkCurve) {
+              var benchmarkCurve = d3.zip(benchmarkCurve.timeseries.date, benchmarkCurve.timeseries.price).map(function(arr) {
+                  var obj = {};
+                  obj.date = new Date(arr[0]);
+                  obj.value = invested * arr[1];
+                  return obj;
+              });
+              this.chartData.benchmarkCurves.push(benchmarkCurve);
+            }, this);
+        },
+        refreshPortfolioData: function() {
+            // TODO: check if solution is not an empty object
+            /*
+            var date = this.solution.portfolio[0].timeseries.date.map(
+                function(date) { return new Date(date); });
+            var invested = this.invested;
+            var price = d3.zip.apply(null, this.solution.portfolio.map(
+                function(etf) {
+                    return etf.timeseries.price.map(function(price) {
+                        return invested * etf.weight * price;
                     });
-                chartLegend.push(isin);
-                chartData.push(series);
+                })).map(function(prices) { return d3.sum(prices); });
+            var growth = d3.zip(date, price).map(
+                function(datum) {
+                    return {date: datum[0], value: datum[1]};
+                });
+            return growth;
+            */
+            
+          var nDataPoints = this.solution.portfolio[0].timeseries.date.length;
+          var invested = this.invested;
+          
+          var etfSeries = [];
+          var legend = [];
+          var cumulativeSeries = Array.apply(null, Array(nDataPoints)).map(Number.prototype.valueOf,0); // init with zeros
+          this.solution.portfolio.forEach(function(etf) {
+            var isin = etf.isin;
+            
+            // building the cumulative timeseries
+            cumulativeSeries = cumulativeSeries.map(function (num, idx) {
+                return num + (invested * etf.weight * etf.timeseries.price[idx]);
             });
+
+            var cumulativeSeriesWithDates = d3.zip(etf.timeseries.date, cumulativeSeries).map(function(arr) {
+              var obj = {};
+              obj.date = new Date(arr[0]);
+              obj.value = arr[1];
+              return obj;
+            });
+            legend.push(isin);
+            etfSeries.push(cumulativeSeriesWithDates);
+          });
+          
+          var chartData = {
+            etfSeries: etfSeries,
+            legend: legend
+          };
+          
+          this.chartData.etfCurves = etfSeries;
+          this.chartData.portfolioCurve = etfSeries[etfSeries.length - 1];
+          //this.chartData.legend = legend;
+        },
+        drawChart: function() {
             var date_format = d3.time.format("%B %Y");
             var locale = d3.locale({
                 decimal: '.',
@@ -211,16 +266,22 @@ Vue.component('vis-graph', {
                 months: [],
                 shortMonths: []
             });
+            
+            console.log(this.chartData.benchmarkCurves);
             MG.data_graphic({
-                data: this.growth,
-                //legend: chartLegend,
+                // data: this.chartData.etfCurves,
+                // legend: this.chartData.legend,
+                // legend_target: '#legend',
+                data: [this.chartData.portfolioCurve, this.chartData.benchmarkCurves[0]],                
+                // data: this.chartData.portfolioCurve,
                 description: 'This is the graph.',
-                target: '#graph',
+                target: '#graph',                
                 x_accessor: 'date',
                 y_accessor: 'value',
                 yax_units: '€',
                 height: 400,
-                width: this.$el.offsetWidth,
+                // width: this.$el.offsetWidth,
+                full_width: true,
                 mouseover: function(d, i) {
                     var value_format = locale.numberFormat('$n');
                     var prefix = d3.formatPrefix(d.value);
@@ -231,31 +292,21 @@ Vue.component('vis-graph', {
             });
         }
     },
-    computed: {
-        growth: function() {
-            var date = this.solution.portfolio[0].timeseries.date.map(
-                function(date) { return new Date(date); });
-            var invested = this.invested;
-            var price = d3.zip.apply(null, this.solution.portfolio.map(
-                function(etf) {
-                    return etf.timeseries.price.map(function(price) {
-                        return invested * etf.weight * price;
-                    });
-                })).map(function(prices) { return d3.sum(prices); });
-            var growth = d3.zip(date, price).map(
-                function(datum) {
-                    return {date: datum[0], value: datum[1]};
-                });
-            return growth;
-        }
-    },
     watch: {
-        solution: function() {
-            // TODO: only draw chart if solution is not an empty object
-            this.drawChart();
+        'solution': function() {
+            this.refreshPortfolioData();
+        },
+        'benchmarks': function() {
+            this.refreshBenchmarkData();
+        },
+        'chartData.portfolioCurve': {
+            handler: function() {
+                this.drawChart();
+            },
+            deep: true
         }
     },
-    template: '<div id="graph"></div>'
+    template: '<div id="graph"></div><div id="legend" style="display:none"></div>'
 });
 
 Vue.component('vis-table', {
@@ -277,6 +328,8 @@ Vue.component('vis-table', {
                         <td>{{ etf.isin }}</td> \
                         <td>{{ etf.metadata.name }}</td> \
                         <td>{{ etf.weight }}</td> \
+                        <td>{{ etf.metadata.stars }}</td> \
+                        <td>{{ etf.metadata.ongoing_charge }}</td> \
                     </tr> \
                 </tbody> \
           </table>'
@@ -284,7 +337,8 @@ Vue.component('vis-table', {
 
 var app = Vue.extend({
     http: {
-        root: 'http://startup-master-mqxgysywwr.elasticbeanstalk.com/api/v0.1' // API root
+        // root: 'http://startup-master-mqxgysywwr.elasticbeanstalk.com/api/v0.1' // API root
+        root: 'http://localhost:8000/api/v0.1' // API root
     },
     data: function() {
         return {
@@ -320,20 +374,42 @@ var app = Vue.extend({
                     'Oceania': [0.0, 0.66]
                 },
             },
-            solution: {}
+            solution: {},
+            benchmarks: [],
         };
     },
     methods: {
         stringify: function(val) {
-                return JSON.stringify(val);
-            },
+            return JSON.stringify(val);
+        },
         fetchPortfolio: function() {
-                this.$http.post('portfolio?verbose=true', this.params).then(function(response) {
-                    this.solution = response.data;
+            this.$http.post('portfolio?verbose=true', this.params).then(function(response) {
+                this.solution = response.data;
+            }, function(response) {
+                console.log('error', response);
+            });
+        },
+        fetchBenchmarks: function () {
+            var benchmarkIsins = ['IE00B296QM64'];
+            benchmarkIsins.forEach(function(benchmarkIsin) {
+                this.$http.get('etfs/' + benchmarkIsins[0] + '?verbose=true').then(function(response) {
+                    this.benchmarks.push({
+                        'isin': benchmarkIsins[0],
+                        'timeseries': response.data.timeseries
+                    });
                 }, function(response) {
                     console.log('error', response);
                 });
-            }
+             }, this);
+            //console.log(this.benchmarks);
+        }
+    },
+    ready: function () {     
+        // load the benchmarks
+        this.fetchBenchmarks();
+        
+        // load a portfolio to avoid empty screen
+        this.fetchPortfolio();    
     },
     template: ' \
         <div class="vue-wrapper"> \
@@ -346,7 +422,7 @@ var app = Vue.extend({
             </div> \
             <div id="output"> \
                 <div class="vis-row"> \
-                    <div class="vis-col"><vis-graph :solution="solution"></vis-graph></div> \
+                    <div class="vis-col"><vis-graph :solution="solution" :benchmarks="benchmarks"></vis-graph></div> \
                     <div class="vis-col">Bar</div> \
                 </div> \
                 <vis-table :solution="solution"></vis-table> \
