@@ -155,7 +155,7 @@ Vue.component('investimize-parameters', {
                 tostring="(100 * x).toFixed(0)+\'%\'"></double-input-range> \
             </td> \
         </tr></tbody> \
-        <tbody id="sector" :class="{\'collapsed\': collapsed.advanced}"> \
+        <tbody id="advanced" :class="{\'collapsed\': collapsed.advanced}"> \
         <tr> \
             <th>Advanced</th> \
             <th><div><a v-on:click="collapse(\'advanced\')"></a></div></th> \
@@ -173,13 +173,23 @@ Vue.component('investimize-parameters', {
         </table>'
 });
 
+var locale = d3.locale({
+    decimal: '.',
+    thousands: ' ',
+    grouping: [3],
+    currency: ['€', ''],
+    dateTime: '',
+    date: '',
+    time: '',
+    periods: [],
+    days: [],
+    shortDays: [],
+    months: [],
+    shortMonths: []
+});
+
 Vue.component('vis-graph', {
-    props: ['solution'],
-    data: function() {
-        return {
-            invested: 10000
-        };
-    },
+    props: ['solution', 'invested'],
     methods: {
         drawChart: function(x) {
             var chartData = [], chartLegend = [];
@@ -197,20 +207,7 @@ Vue.component('vis-graph', {
                 chartData.push(series);
             });
             var date_format = d3.time.format("%B %Y");
-            var locale = d3.locale({
-                decimal: '.',
-                thousands: ' ',
-                grouping: [3],
-                currency: ['€', ''],
-                dateTime: '',
-                date: '',
-                time: '',
-                periods: [],
-                days: [],
-                shortDays: [],
-                months: [],
-                shortMonths: []
-            });
+            var value_format = locale.numberFormat('$n');
             MG.data_graphic({
                 data: this.growth,
                 //legend: chartLegend,
@@ -222,8 +219,6 @@ Vue.component('vis-graph', {
                 height: 400,
                 width: this.$el.offsetWidth,
                 mouseover: function(d, i) {
-                    var value_format = locale.numberFormat('$n');
-                    var prefix = d3.formatPrefix(d.value);
                     d3.select('#graph svg .mg-active-datapoint').text(
                         date_format(d.date) + '   ' +
                         value_format(Math.round(100 * Math.round(d.value / 100))));
@@ -259,24 +254,52 @@ Vue.component('vis-graph', {
 });
 
 Vue.component('vis-table', {
-    props: ['solution'],
+    props: ['solution', 'invested'],
+    methods: {
+        computeInvested: function(weight) {
+            var value_format = locale.numberFormat('$n');
+            return value_format(Math.round(weight * this.invested));
+        },
+        abbrev: function(string) {
+            if(string.match(/None|Multiple/)) {
+                return '';
+            }
+            var abbrev = string.indexOf(' ') > -1 ? string.split(' ').map(
+                function(string) {
+                    return string.charAt(0);
+                }).join('') : (string.charAt(0) + string.charAt(1)).toUpperCase();
+            return abbrev;
+        }
+    },
     template: '\
-            <table> \
+            <table id="portfolio"> \
                 <thead> \
-                    <tr><th colspan="3"> \
-                        <a href="{{ solution.xray }}">X-ray</a> \
-                    </th></tr> \
                     <tr> \
-                        <th>isin</th> \
-                        <th>name</th> \
-                        <th>weight</th> \
+                        <th></th> \
+                        <th>Amount</th> \
+                        <th>Investment</th> \
+                        <th>Type</th> \
+                        <th>Region</th> \
                     </tr> \
                 </thead> \
                 <tbody> \
                     <tr v-for="etf in solution.portfolio"> \
-                        <td>{{ etf.isin }}</td> \
-                        <td>{{ etf.metadata.name }}</td> \
-                        <td>{{ etf.weight }}</td> \
+                        <td>{{ Math.round(100 * etf.weight)+\'%\' }}</td> \
+                        <td>{{ computeInvested(etf.weight) }}</td> \
+                        <td><div>{{ etf.metadata.name }}</div></td> \
+                        <td><i class="hint-left abbrev" \
+                                v-if="abbrev(etf.metadata.investimize_sector) || \
+                                abbrev(etf.metadata.investimize_content)"> \
+                                {{ abbrev(etf.metadata.investimize_sector) || \
+                                abbrev(etf.metadata.investimize_content) }} \
+                                <span>{{ abbrev(etf.metadata.investimize_sector) ? \
+                                    etf.metadata.investimize_sector : \
+                                    etf.metadata.investimize_content }}</span> \
+                            </i></td> \
+                        <td><i class="hint-left abbrev" \
+                                v-if="abbrev(etf.metadata.investimize_region)">{{ abbrev(etf.metadata.investimize_region) }} \
+                                <span>{{ etf.metadata.investimize_region }}</span> \
+                            </i></td> \
                     </tr> \
                 </tbody> \
           </table>'
@@ -288,15 +311,16 @@ var app = Vue.extend({
     },
     data: function() {
         return {
+            invested: 10000,
             params: {
                 weight: [0.05, 0.25],
                 'return': 0.10,
                 backtest: 0,
-                allow_short: true,
+                allow_short: false,
                 allow_leveraged: true,
                 content: {
                     'Stocks': [0.0, 1.0],
-                    'Bonds': [0.0, 0.4],
+                    'Bonds': [0.0, 0.25],
                     'Cash': [0.0, 0.25],
                     'Commodities': [0.0, 1.0],
                     'Real Estate': [0.0, 1.0]
@@ -338,18 +362,20 @@ var app = Vue.extend({
     template: ' \
         <div class="vue-wrapper"> \
             <div id="input"> \
-                <a class="investimize-logo" v-link="{ path: \'/\', exact: true }"> \
+                <a style="display:none" class="investimize-logo" v-link="{ path: \'/\', exact: true }"> \
                     <img>\
-                </a><br> \
+                </a> \
                 <investimize-parameters :params.sync="params"></investimize-parameters> \
                 <a href="#" class="chiclet" onclick="return false" v-on:click="fetchPortfolio()">Update <i class="fa fa-chevron-circle-right"></i></a> \
             </div> \
             <div id="output"> \
                 <div class="vis-row"> \
-                    <div class="vis-col"><vis-graph :solution="solution"></vis-graph></div> \
+                    <div class="vis-col"> \
+                        <vis-graph :solution="solution" :invested="invested"></vis-graph> \
+                    </div> \
                     <div class="vis-col">Bar</div> \
                 </div> \
-                <vis-table :solution="solution"></vis-table> \
+                <vis-table :solution="solution" :invested="invested"></vis-table> \
             </div> \
         </div>'
 });
