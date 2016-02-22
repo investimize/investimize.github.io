@@ -58,7 +58,7 @@ Vue.component('double-input-range', {
 });
 
 Vue.component('investimize-parameters', {
-    props: ['params'],
+    props: ['params', 'invested'],
     data: function() {
         return {
             collapsed: {
@@ -78,6 +78,18 @@ Vue.component('investimize-parameters', {
         <table> \
         <tbody><tr> \
             <th><span class="hint-right"> \
+                Amount \
+                <i class="fa fa-question-circle"></i> \
+                <span>How much you would like to invest.</span> \
+            </span></th> \
+            <th> \
+                <input-range min="1000" max="100000" step="1000" \
+                    :value.sync="invested" \
+                tostring="\'€\'+d3.formatPrefix(x).scale(x)+d3.formatPrefix(x).symbol"></input-range> \
+            </th> \
+        </tr></tbody> \
+        <tbody><tr> \
+            <th><span class="hint-right"> \
                 Yearly return \
                 <i class="fa fa-question-circle"></i> \
                 <span>The yearly return you would like on your portfolio.</span> \
@@ -92,7 +104,7 @@ Vue.component('investimize-parameters', {
             <th><span class="hint-right"> \
                 Weight \
                 <i class="fa fa-question-circle"></i> \
-                <span>The minimum and maximum weight of an ETF in your portfolio.</span> \
+                <span>The minimum and maximum percentage of an ETF in your portfolio.</span> \
             </span></th> \
             <th> \
                 <double-input-range min="0.01" max="0.4" step="0.01" \
@@ -124,7 +136,7 @@ Vue.component('investimize-parameters', {
             <th><span class="hint-right"> \
                 Region \
                 <i class="fa fa-question-circle"></i> \
-                <span>The minimum and maximum weight of a geographical region in your portfolio.</span> \
+                <span>The minimum and maximum percentage of a geographical region in your portfolio.</span> \
             </span></th> \
             <th><div><a v-on:click="collapse(\'region\')"></a></div></th> \
         </tr> \
@@ -142,7 +154,7 @@ Vue.component('investimize-parameters', {
             <th><span class="hint-right"> \
                 Sector \
                 <i class="fa fa-question-circle"></i> \
-                <span>The minimum and maximum weight of an industry sector such as Healthcare in your portfolio.</span> \
+                <span>The minimum and maximum percentage of an industry sector such as Healthcare in your portfolio.</span> \
             </span></th> \
             <th><a v-on:click="collapse(\'sector\')"></a></th> \
         </tr> \
@@ -155,7 +167,7 @@ Vue.component('investimize-parameters', {
                 tostring="(100 * x).toFixed(0)+\'%\'"></double-input-range> \
             </td> \
         </tr></tbody> \
-        <tbody id="sector" :class="{\'collapsed\': collapsed.advanced}"> \
+        <tbody id="advanced" :class="{\'collapsed\': collapsed.advanced}"> \
         <tr> \
             <th>Advanced</th> \
             <th><div><a v-on:click="collapse(\'advanced\')"></a></div></th> \
@@ -244,27 +256,6 @@ Vue.component('vis-graph', {
             cumulativeSeries = cumulativeSeries.map(function (num, idx) {
                 return num + (invested * etf.weight * etf.timeseries.price[idx]);
             });
-
-            var cumulativeSeriesWithDates = d3.zip(etf.timeseries.date, cumulativeSeries).map(function(arr) {
-              var obj = {};
-              obj.date = new Date(arr[0]);
-              obj.value = arr[1];
-              return obj;
-            });
-            legend.push(isin);
-            etfSeries.push(cumulativeSeriesWithDates);
-          });
-          
-          var chartData = {
-            etfSeries: etfSeries,
-            legend: legend
-          };
-          
-          this.chartData.etfCurves = etfSeries;
-          this.chartData.portfolioCurve = etfSeries[etfSeries.length - 1];
-          //this.chartData.legend = legend;
-        },
-        drawChart: function() {
             var date_format = d3.time.format("%B %Y");
             var value_format = locale.numberFormat('$n');
             MG.data_graphic({
@@ -333,6 +324,7 @@ Vue.component('vis-table', {
     methods: {
         computeInvested: function(weight) {
             var value_format = locale.numberFormat('$n');
+            weight = Math.round(weight * 100) / 100;
             return value_format(Math.round(weight * this.invested));
         },
         abbrev: function(string) {
@@ -364,7 +356,8 @@ Vue.component('vis-table', {
                     <tr v-for="etf in solution.portfolio"> \
                         <td>{{ Math.round(100 * etf.weight)+\'%\' }}</td> \
                         <td>{{ computeInvested(etf.weight) }}</td> \
-                        <td><div>{{ etf.metadata.name }}</div></td> \
+                        <td><div><a href="http://www.morningstar.be/be/etf/snapshot/snapshot.aspx?id={{etf.metadata.id.morningstar}}">\
+                            {{ etf.metadata.name }}</a></div></td> \
                         <td><i class="hint-left abbrev" \
                                 v-if="abbrev(etf.metadata.investimize_sector) || \
                                 abbrev(etf.metadata.investimize_content)"> \
@@ -471,17 +464,23 @@ var app = Vue.extend({
             </div> \
             <div id="output"> \
                 <div class="vis-row"> \
-                    <div class="vis-col"><vis-graph :invested="invested" :solution="solution" :benchmarks="benchmarks"></vis-graph></div> \
-                    <div class="vis-col">Bar</div> \
+                    <div class="vis-col"> \
+                        <h1>Historical performance</h1> \
+                        <vis-graph :solution="solution" :invested="invested"></vis-graph> \
+                    </div> \
+                    <div class="vis-col"> \
+                        <h1>Portfolio contents</h1> \
+                    </div> \
                 </div> \
+                <h1>Your portfolio</h1> \
                 <vis-table :solution="solution" :invested="invested"></vis-table> \
             </div> \
         </div>'
 });
 
-var hero = Vue.extend({
+var landing = Vue.extend({
     template: ' \
-        <div class="vue-wrapper"> \
+        <div id="landing" class="vue-wrapper"> \
         <nav-bar></nav-bar> \
         <div id="hero" class="row"> \
             <div class="col"> \
@@ -566,7 +565,7 @@ var router = new VueRouter({
 
 router.map({
     '/': {
-        component: hero
+        component: landing
     },
     '/app': {
         component: app

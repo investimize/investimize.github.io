@@ -50,7 +50,7 @@ body {
     line-height: 1.3;
 }
 @media (max-width: 450px) { /* <= iPhone 6+ */
-    body {
+    #landing {
         font-size: 18px;
     }
 }
@@ -82,15 +82,18 @@ p {
     margin: 0.5em 0;
 }
 
-a:not(.chiclet) {
+.row a:not(.chiclet) {
     text-decoration: none;
-    border-bottom: 2px dotted rgba(4, 13, 20, 0.5);
+    background: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.08);
+    border-radius: 2px;
+    transition: all 150ms cubic-bezier(0.34, 1.61, 0.7, 1);
 }
 
-a:not(.chiclet):hover {
+.row a:not(.chiclet):hover {
     text-decoration: none;
-    border-bottom-style: solid;
-    border-bottom-color: rgb(4, 13, 20);
+    background: rgba(0, 0, 0, 0.12);
+    box-shadow: 0 0 0 6px rgba(0, 0, 0, 0.12);
 }
 
 /* Investimize logo. */
@@ -280,6 +283,8 @@ nav > div:last-child a.active {
 #footer a {
     color: white;
     border: none;
+    background: none;
+    box-shadow: none;
 }
 
 #footer a:hover {
@@ -303,6 +308,12 @@ nav > div:last-child a.active {
 }
 
 /* Input. */
+
+@media (max-width: 320px) { /* <= iPhone 5 */
+    #product {
+        font-size: 22px;
+    }
+}
 
 #input {
     padding: 1em;
@@ -475,6 +486,24 @@ nav > div:last-child a.active {
     display: none;
 }
 
+#portfolio, .vis-col:last-child {
+    margin-top: 2em;
+}
+
+#output {
+    padding: 1em;
+    box-sizing: border-box;
+    font-size: 0.7em;
+}
+
+@media (min-width: 50em) {
+
+    #output {
+        padding: 2em;
+    }
+
+}
+
 @media (min-width: 70em) {
 
     .vis-row {
@@ -485,7 +514,7 @@ nav > div:last-child a.active {
 
     .vis-col {
         display: table-cell;
-        border: 1px solid red;
+        vertical-align: middle;
     }
 
     .vis-col:last-child {
@@ -498,19 +527,13 @@ nav > div:last-child a.active {
 
 }
 
-#output {
-    padding: 2em;
-    box-sizing: border-box;
-    font-size: 0.7em;
-}
-
 #portfolio {
     text-align: left;
     width: 100%;
 }
 
 #portfolio tr:hover td {
-    background: rgba(4, 13, 20, 0.05);
+    background: rgba(4, 13, 20, 0.06);
 }
 
 #portfolio th {
@@ -521,7 +544,7 @@ nav > div:last-child a.active {
     position: relative;
     white-space: nowrap;
     vertical-align: middle;
-    line-height: 3em;
+    line-height: 2.7em;
     text-align: right;
 }
 
@@ -531,8 +554,8 @@ nav > div:last-child a.active {
 
 
 #portfolio td, #portfolio th {
-    padding-left: 0.75em;
-    padding-right: 0.75em;
+    padding-left: 0.6em;
+    padding-right: 0.6em;
 }
 
 #portfolio td:nth-child(3), #portfolio th:nth-child(3) {
@@ -573,4 +596,17 @@ nav > div:last-child a.active {
     white-space: nowrap;
     font-size: initial;
     width: 7em;
+}
+
+#portfolio a {
+    color: inherit;
+    text-decoration: none;
+}
+
+#portfolio a:hover {
+    text-decoration: underline;
+}
+
+#output h1 {
+    display: none;
 }

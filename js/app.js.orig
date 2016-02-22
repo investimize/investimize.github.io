@@ -58,7 +58,7 @@ Vue.component('double-input-range', {
 });
 
 Vue.component('investimize-parameters', {
-    props: ['params'],
+    props: ['params', 'invested'],
     data: function() {
         return {
             collapsed: {
@@ -78,6 +78,18 @@ Vue.component('investimize-parameters', {
         <table> \
         <tbody><tr> \
             <th><span class="hint-right"> \
+                Amount \
+                <i class="fa fa-question-circle"></i> \
+                <span>How much you would like to invest.</span> \
+            </span></th> \
+            <th> \
+                <input-range min="1000" max="100000" step="1000" \
+                    :value.sync="invested" \
+                tostring="\'€\'+d3.formatPrefix(x).scale(x)+d3.formatPrefix(x).symbol"></input-range> \
+            </th> \
+        </tr></tbody> \
+        <tbody><tr> \
+            <th><span class="hint-right"> \
                 Yearly return \
                 <i class="fa fa-question-circle"></i> \
                 <span>The yearly return you would like on your portfolio.</span> \
@@ -92,7 +104,7 @@ Vue.component('investimize-parameters', {
             <th><span class="hint-right"> \
                 Weight \
                 <i class="fa fa-question-circle"></i> \
-                <span>The minimum and maximum weight of an ETF in your portfolio.</span> \
+                <span>The minimum and maximum percentage of an ETF in your portfolio.</span> \
             </span></th> \
             <th> \
                 <double-input-range min="0.01" max="0.4" step="0.01" \
@@ -124,7 +136,7 @@ Vue.component('investimize-parameters', {
             <th><span class="hint-right"> \
                 Region \
                 <i class="fa fa-question-circle"></i> \
-                <span>The minimum and maximum weight of a geographical region in your portfolio.</span> \
+                <span>The minimum and maximum percentage of a geographical region in your portfolio.</span> \
             </span></th> \
             <th><div><a v-on:click="collapse(\'region\')"></a></div></th> \
         </tr> \
@@ -142,7 +154,7 @@ Vue.component('investimize-parameters', {
             <th><span class="hint-right"> \
                 Sector \
                 <i class="fa fa-question-circle"></i> \
-                <span>The minimum and maximum weight of an industry sector such as Healthcare in your portfolio.</span> \
+                <span>The minimum and maximum percentage of an industry sector such as Healthcare in your portfolio.</span> \
             </span></th> \
             <th><a v-on:click="collapse(\'sector\')"></a></th> \
         </tr> \
@@ -155,7 +167,7 @@ Vue.component('investimize-parameters', {
                 tostring="(100 * x).toFixed(0)+\'%\'"></double-input-range> \
             </td> \
         </tr></tbody> \
-        <tbody id="advanced" :class="{\'collapsed\': collapsed.advanced}"> \
+        <tbody id="sector" :class="{\'collapsed\': collapsed.advanced}"> \
         <tr> \
             <th>Advanced</th> \
             <th><div><a v-on:click="collapse(\'advanced\')"></a></div></th> \
@@ -189,11 +201,9 @@ var locale = d3.locale({
 });
 
 Vue.component('vis-graph', {
-<<<<<<< HEAD
-    props: ['solution', 'benchmarks'],
+    props: ['solution', 'benchmarks', 'invested'],
     data: function() {
         return {
-            invested: 10000,
             chartData: {
                 portfolioCurve: [],
                 etfCurves: [],
@@ -201,9 +211,6 @@ Vue.component('vis-graph', {
             }
         };
     },
-=======
-    props: ['solution', 'invested'],
->>>>>>> d5ce1b89b1f1e3a4847ff1f92577d7ff9a23f728
     methods: {
         refreshBenchmarkData: function() {
             var invested = this.invested;
@@ -271,49 +278,58 @@ Vue.component('vis-graph', {
         },
         drawChart: function() {
             var date_format = d3.time.format("%B %Y");
-<<<<<<< HEAD
-            var locale = d3.locale({
-                decimal: '.',
-                thousands: ' ',
-                grouping: [3],
-                currency: ['€', ''],
-                dateTime: '',
-                date: '',
-                time: '',
-                periods: [],
-                days: [],
-                shortDays: [],
-                months: [],
-                shortMonths: []
-            });
-            
-            console.log(this.chartData.benchmarkCurves);
-=======
             var value_format = locale.numberFormat('$n');
->>>>>>> d5ce1b89b1f1e3a4847ff1f92577d7ff9a23f728
             MG.data_graphic({
                 // data: this.chartData.etfCurves,
                 // legend: this.chartData.legend,
-                // legend_target: '#legend',
                 data: [this.chartData.portfolioCurve, this.chartData.benchmarkCurves[0]],                
-                // data: this.chartData.portfolioCurve,
+                legend: ['Portfolio', 'MSCI World'],
+                legend_target: '#legend',
                 description: 'This is the graph.',
-                target: '#graph',                
+                target: '#graph',
                 x_accessor: 'date',
                 y_accessor: 'value',
                 yax_units: '€',
+<<<<<<< HEAD
                 height: 400,
                 // width: this.$el.offsetWidth,
                 full_width: true,
+                aggregate_rollover: false,
+=======
+                height: 350,
+                width: this.$el.offsetWidth,
+>>>>>>> responsive
                 mouseover: function(d, i) {
+                    var value_format = locale.numberFormat('$n');
+                    var prefix = d3.formatPrefix(d.value);
                     d3.select('#graph svg .mg-active-datapoint').text(
+                        this.legend[d.line_id - 1] + '  -  ' +
                         date_format(d.date) + '   ' +
                         value_format(Math.round(100 * Math.round(d.value / 100))));
                 }
             });
         }
     },
+    computed: {
+        growth: function() {
+            var date = this.solution.portfolio[0].timeseries.date.map(
+                function(date) { return new Date(date); });
+            var invested = this.invested;
+            var price = d3.zip.apply(null, this.solution.portfolio.map(
+                function(etf) {
+                    return etf.timeseries.price.map(function(price) {
+                        return invested * etf.weight * price;
+                    });
+                })).map(function(prices) { return d3.sum(prices); });
+            var growth = d3.zip(date, price).map(
+                function(datum) {
+                    return {date: datum[0], value: datum[1]};
+                });
+            return growth;
+        }
+    },
     watch: {
+<<<<<<< HEAD
         'solution': function() {
             this.refreshPortfolioData();
         },
@@ -325,6 +341,14 @@ Vue.component('vis-graph', {
                 this.drawChart();
             },
             deep: true
+=======
+        invested: function() {
+            this.drawChart();
+        },
+        solution: function() {
+            // TODO: only draw chart if solution is not an empty object
+            this.drawChart();
+>>>>>>> responsive
         }
     },
     template: '<div id="graph"></div><div id="legend" style="display:none"></div>'
@@ -335,6 +359,7 @@ Vue.component('vis-table', {
     methods: {
         computeInvested: function(weight) {
             var value_format = locale.numberFormat('$n');
+            weight = Math.round(weight * 100) / 100;
             return value_format(Math.round(weight * this.invested));
         },
         abbrev: function(string) {
@@ -351,6 +376,9 @@ Vue.component('vis-table', {
     template: '\
             <table id="portfolio"> \
                 <thead> \
+                    <tr><th colspan="3"> \
+                        <a href="{{ solution.xray }}">X-ray</a> \
+                    </th></tr> \
                     <tr> \
                         <th></th> \
                         <th>Amount</th> \
@@ -361,16 +389,10 @@ Vue.component('vis-table', {
                 </thead> \
                 <tbody> \
                     <tr v-for="etf in solution.portfolio"> \
-<<<<<<< HEAD
-                        <td>{{ etf.isin }}</td> \
-                        <td>{{ etf.metadata.name }}</td> \
-                        <td>{{ etf.weight }}</td> \
-                        <td>{{ etf.metadata.stars }}</td> \
-                        <td>{{ etf.metadata.ongoing_charge }}</td> \
-=======
                         <td>{{ Math.round(100 * etf.weight)+\'%\' }}</td> \
                         <td>{{ computeInvested(etf.weight) }}</td> \
-                        <td><div>{{ etf.metadata.name }}</div></td> \
+                        <td><div><a href="http://www.morningstar.be/be/etf/snapshot/snapshot.aspx?id={{etf.metadata.id.morningstar}}">\
+                            {{ etf.metadata.name }}</a></div></td> \
                         <td><i class="hint-left abbrev" \
                                 v-if="abbrev(etf.metadata.investimize_sector) || \
                                 abbrev(etf.metadata.investimize_content)"> \
@@ -384,7 +406,6 @@ Vue.component('vis-table', {
                                 v-if="abbrev(etf.metadata.investimize_region)">{{ abbrev(etf.metadata.investimize_region) }} \
                                 <span>{{ etf.metadata.investimize_region }}</span> \
                             </i></td> \
->>>>>>> d5ce1b89b1f1e3a4847ff1f92577d7ff9a23f728
                     </tr> \
                 </tbody> \
           </table>'
@@ -392,8 +413,8 @@ Vue.component('vis-table', {
 
 var app = Vue.extend({
     http: {
-        // root: 'http://startup-master-mqxgysywwr.elasticbeanstalk.com/api/v0.1' // API root
-        root: 'http://localhost:8000/api/v0.1' // API root
+        root: 'http://startup-master-mqxgysywwr.elasticbeanstalk.com/api/v0.1' // API root
+        // root: 'http://localhost:8000/api/v0.1' // API root
     },
     data: function() {
         return {
@@ -436,8 +457,8 @@ var app = Vue.extend({
     },
     methods: {
         stringify: function(val) {
-            return JSON.stringify(val);
-        },
+                return JSON.stringify(val);
+            },
         fetchPortfolio: function() {
             this.$http.post('portfolio?verbose=true', this.params).then(function(response) {
                 this.solution = response.data;
@@ -468,33 +489,38 @@ var app = Vue.extend({
         this.fetchPortfolio();    
     },
     template: ' \
-        <div class="vue-wrapper"> \
+        <div id="product" class="vue-wrapper"> \
             <div id="input"> \
                 <a style="display:none" class="investimize-logo" v-link="{ path: \'/\', exact: true }"> \
                     <img>\
                 </a> \
-                <investimize-parameters :params.sync="params"></investimize-parameters> \
+                <investimize-parameters :params.sync="params" :invested.sync="invested"></investimize-parameters> \
                 <a href="#" class="chiclet" onclick="return false" v-on:click="fetchPortfolio()">Update <i class="fa fa-chevron-circle-right"></i></a> \
             </div> \
             <div id="output"> \
                 <div class="vis-row"> \
 <<<<<<< HEAD
-                    <div class="vis-col"><vis-graph :solution="solution" :benchmarks="benchmarks"></vis-graph></div> \
+                    <div class="vis-col"><vis-graph :invested="invested" :solution="solution" :benchmarks="benchmarks"></vis-graph></div> \
+                    <div class="vis-col">Bar</div> \
 =======
                     <div class="vis-col"> \
+                        <h1>Historical performance</h1> \
                         <vis-graph :solution="solution" :invested="invested"></vis-graph> \
                     </div> \
->>>>>>> d5ce1b89b1f1e3a4847ff1f92577d7ff9a23f728
-                    <div class="vis-col">Bar</div> \
+                    <div class="vis-col"> \
+                        <h1>Portfolio contents</h1> \
+                    </div> \
+>>>>>>> responsive
                 </div> \
+                <h1>Your portfolio</h1> \
                 <vis-table :solution="solution" :invested="invested"></vis-table> \
             </div> \
         </div>'
 });
 
-var hero = Vue.extend({
+var landing = Vue.extend({
     template: ' \
-        <div class="vue-wrapper"> \
+        <div id="landing" class="vue-wrapper"> \
         <nav-bar></nav-bar> \
         <div id="hero" class="row"> \
             <div class="col"> \
@@ -579,7 +605,7 @@ var router = new VueRouter({
 
 router.map({
     '/': {
-        component: hero
+        component: landing
     },
     '/app': {
         component: app
