@@ -31,7 +31,12 @@ a, button, label {
     .row {
         padding-left: 6%;
         padding-right: 6%;
-        border-spacing: 2em 3.5em;
+    }
+    .col {
+        padding: 2em 0;
+    }
+    .col:not(:last-child) {
+        padding-right: 3.5em;
     }
 }
 
@@ -76,6 +81,10 @@ h3 {
 
 h4 {
     font-weight: 500;
+}
+
+p {
+    margin: 0.5em 0;
 }
 
 a:not(.chiclet) {
@@ -176,22 +185,7 @@ nav > div:last-child a.active {
 
 #hero .col {
     margin: 0 2em;
-}
-
-@media (min-width: 70em) { /* Desktop */
-    #hero {
-        border-spacing: 0;
-    }
-}
-
-@media (max-width: 375px) { /* <= iPhone 6 */
-    #hero {
-        padding-top: 0;
-    }
-    #hero .col {
-        font-size: 0.9em;
-        margin: 1.5em 2em;
-    }
+    padding: 0;
 }
 
 #hero h1 {
