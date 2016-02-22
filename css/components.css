@@ -271,7 +271,7 @@ a.chiclet.light:not(.disabled):focus:active {
         0 0 0 5px rgba(0, 0, 0, 0.05);
 }
 
-/* Material hamburger button. */
+/* Material hamburger button */
 
 #hamburger {
     display: none;
@@ -473,4 +473,160 @@ nav > div:last-child ul {
         transform: translateY(100%) scale(1);
     }
     
+}
+
+/* Hint on hover */
+
+.hint-top, .hint-right, .hint-bottom, .hint-left, [data-hint] {
+    position: relative;
+    -webkit-font-smoothing: subpixel-antialiased; /* Prevent font thinning on transition in Safari. */
+}
+
+[data-hint]::before {
+    content: attr(data-hint);
+}
+
+.hint-top > span:last-child, .hint-right > span:last-child, .hint-bottom > span:last-child, .hint-left > span:last-child, [data-hint]::before, [data-hint]::after {
+    z-index: 999; /* Also prevent font thinning in Safari on underlying elements by increasing z-index. */
+    pointer-events: none;
+    visibility: hidden;
+    transition: transform 200ms cubic-bezier(0.34, 1.61, 0.7, 1);
+}
+
+/* Base hint content style */
+.hint-top > span:last-child, .hint-right > span:last-child, .hint-bottom > span:last-child, .hint-left > span:last-child, [data-hint]::before {
+    width: 160px;
+    color: #333;
+    display: inline-block;
+    position: absolute;
+    font-size: 0.85em;
+    font-weight: normal;
+    white-space: normal;
+    background: white;
+    padding: 10px 12px;
+    border-radius: 4px;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+.hint-top > span:last-child, .hint-top[data-hint]::before {
+    bottom: 100%;
+    left: 50%;
+    margin-bottom: 20px;
+    transform: translateX(-50%) scale(0.7);
+    transform-origin: 50% 100%;
+}
+
+.hint-right > span:last-child, .hint-right[data-hint]::before {
+    text-align: left;
+    top: 50%;
+    left: 100%;
+    margin-left: 20px;
+    transform: translateY(-50%) scale(0.7);
+    transform-origin: 0 50%;
+}
+
+.hint-bottom > span:last-child, .hint-bottom[data-hint]::before {
+    top: 100%;
+    left: 50%;
+    margin-top: 20px;
+    transform: translateX(-50%) scale(0.7);
+    transform-origin: 50% 0;
+}
+
+.hint-left > span:last-child, .hint-left[data-hint]::before {
+    text-align: left;
+    top: 50%;
+    right: 100%;
+    margin-right: 20px;
+    transform: translateY(-50%) scale(0.7);
+    transform-origin: 100% 50%;
+}
+
+/* Base arrow style */
+.hint-top > span:last-child::after, .hint-right > span:last-child::after, .hint-bottom > span:last-child::after, .hint-left > span:last-child::after, [data-hint]::after {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 0; 
+    height: 0;
+}
+
+.hint-top > span:last-child::after, .hint-top[data-hint]::after {
+    left: 50%;
+    transform: translateX(-50%) scale(0.7);
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-top: 12px solid white;
+}
+.hint-top > span:last-child::after { top: 100%; margin-top: -1px; }
+.hint-top[data-hint]::after { bottom: 100%; margin-bottom: 9px; transform-origin: 50% 0; }
+
+.hint-right > span:last-child::after, .hint-right[data-hint]::after {
+    top: 50%;
+    transform: translateY(-50%) scale(0.7);
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+    border-right: 12px solid white;
+}
+.hint-right > span:last-child::after { right: 100%; margin-right: -1px; }
+.hint-right[data-hint]::after { left: 100%; margin-left: 9px; transform-origin: 100% 50%; }
+
+.hint-bottom > span:last-child::after, .hint-bottom[data-hint]::after {
+    left: 50%;
+    transform: translateX(-50%) scale(0.7);
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 12px solid white;
+}
+.hint-bottom > span:last-child::after { bottom: 100%; margin-bottom: -1px; }
+.hint-bottom[data-hint]::after { top: 100%; margin-top: 9px; transform-origin: 50% 100%; }
+
+.hint-left > span:last-child::after, .hint-left[data-hint]::after {
+    top: 50%;
+    transform: translateY(-50%) scale(0.7);
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+    border-left: 12px solid white;
+}
+.hint-left > span:last-child::after { left: 100%; margin-left: -1px; }
+.hint-left[data-hint]::after { right: 100%; margin-right: 9px; transform-origin: 0% 50%; }
+
+/* Hover content style */
+.hint-top:hover > span:last-child, .hint-right:hover > span:last-child, .hint-bottom:hover > span:last-child, .hint-left:hover > span:last-child, [data-hint]:hover::before, [data-hint]:hover::after {
+    visibility: visible;
+    opacity: 1;
+}
+
+.hint-top:hover > span:last-child, .hint-top[data-hint]:hover::before {
+    transform: translateX(-50%);
+}
+
+.hint-right:hover > span:last-child, .hint-right[data-hint]:hover::before {
+    transform: translateY(-50%);
+}
+
+.hint-bottom:hover > span:last-child, .hint-bottom[data-hint]:hover::before {
+    transform: translateX(-50%);
+}
+
+.hint-left:hover > span:last-child, .hint-left[data-hint]:hover::before {
+    transform: translateY(-50%);
+}
+
+/* Hover arrow style */
+.hint-top:hover > span:last-child::after, .hint-top[data-hint]:hover::after {
+    transform: translateX(-50%);
+}
+
+.hint-right:hover > span:last-child::after, .hint-right[data-hint]:hover::after {
+    transform: translateY(-50%);
+}
+
+.hint-bottom:hover > span:last-child::after, .hint-bottom[data-hint]:hover::after {
+    transform: translateX(-50%);
+}
+
+.hint-left:hover > span:last-child::after, .hint-left[data-hint]:hover::after {
+    transform: translateY(-50%);
 }

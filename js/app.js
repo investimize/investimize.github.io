@@ -77,7 +77,11 @@ Vue.component('investimize-parameters', {
     template: ' \
         <table> \
         <tbody><tr> \
-            <th>Return</th> \
+            <th><span class="hint-right"> \
+                Yearly return \
+                <i class="fa fa-question-circle"></i> \
+                <span>The yearly return you would like on your portfolio.</span> \
+            </span></th> \
             <th> \
                 <input-range min="0.02" max="0.15" step="0.005" \
                     :value.sync="params[\'return\']" \
@@ -85,7 +89,11 @@ Vue.component('investimize-parameters', {
             </th> \
         </tr></tbody> \
         <tbody><tr> \
-            <th>Weight</th> \
+            <th><span class="hint-right"> \
+                Weight \
+                <i class="fa fa-question-circle"></i> \
+                <span>The minimum and maximum weight of an ETF in your portfolio.</span> \
+            </span></th> \
             <th> \
                 <double-input-range min="0.01" max="0.4" step="0.01" \
                     :value-min="params.weight[0]" :value-max="params.weight[1]" \
@@ -95,8 +103,12 @@ Vue.component('investimize-parameters', {
         </tr></tbody> \
         <tbody id="assetclass" :class="{\'collapsed\': collapsed.content}"> \
         <tr> \
-            <th>Asset class</th> \
-            <th><div><i v-on:click="collapse(\'content\')"></i></div></th> \
+            <th><span class="hint-right"> \
+                Asset class \
+                <i class="fa fa-question-circle"></i> \
+                <span>The minimum and maximum percentage of stocks, bonds, cash and commodities in your portfolio.</span> \
+            </span></th> \
+            <th><div><a v-on:click="collapse(\'content\')"></a></div></th> \
         </tr> \
         <tr v-if="type != \'Real Estate\'" v-for="(type, range) in params.content"> \
             <td><div>{{type}}</div></td> \
@@ -109,8 +121,12 @@ Vue.component('investimize-parameters', {
         </tr></tbody> \
         <tbody id="region" :class="{\'collapsed\': collapsed.region}"> \
         <tr> \
-            <th>Region</th> \
-            <th><div><i v-on:click="collapse(\'region\')"></i></div></th> \
+            <th><span class="hint-right"> \
+                Region \
+                <i class="fa fa-question-circle"></i> \
+                <span>The minimum and maximum weight of a geographical region in your portfolio.</span> \
+            </span></th> \
+            <th><div><a v-on:click="collapse(\'region\')"></a></div></th> \
         </tr> \
         <tr v-for="(type, range) in params.region"> \
             <td><div>{{type}}</div></td> \
@@ -123,8 +139,12 @@ Vue.component('investimize-parameters', {
         </tr></tbody> \
         <tbody id="sector" :class="{\'collapsed\': collapsed.sector}"> \
         <tr> \
-            <th>Sector</th> \
-            <th><i v-on:click="collapse(\'sector\')"></i></th> \
+            <th><span class="hint-right"> \
+                Sector \
+                <i class="fa fa-question-circle"></i> \
+                <span>The minimum and maximum weight of an industry sector such as Healthcare in your portfolio.</span> \
+            </span></th> \
+            <th><a v-on:click="collapse(\'sector\')"></a></th> \
         </tr> \
         <tr v-for="(type, range) in params.sector"> \
             <td><div>{{type.replace(\' Services\', \'\')}}</div></td> \
@@ -138,7 +158,7 @@ Vue.component('investimize-parameters', {
         <tbody id="sector" :class="{\'collapsed\': collapsed.advanced}"> \
         <tr> \
             <th>Advanced</th> \
-            <th><div><i v-on:click="collapse(\'advanced\')"></i></div></th> \
+            <th><div><a v-on:click="collapse(\'advanced\')"></a></div></th> \
         </tr> \
         <tr> \
             <td><div>Leveraged ETFs</div></td> \

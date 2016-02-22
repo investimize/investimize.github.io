@@ -397,7 +397,7 @@ nav > div:last-child a.active {
     overflow: visible;
 }
 
-#input tbody th i {
+#input tbody th a {
     color: rgba(0, 0, 0, 0.5);
     font-style: normal;
     font-size: 1em;
@@ -419,12 +419,12 @@ nav > div:last-child a.active {
     -webkit-backface-visibility: hidden; /* Fix 1px shift bug on Chrome. */
 }
 
-#input tbody th i:hover {
+#input tbody th a:hover {
     transform: translateY(-50%) translateY(-4px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
 }
 
-#input tbody th i::before, #input tbody th i::after {
+#input tbody th a::before, #input tbody th a::after {
     content: '';
     position: absolute;
     top: 50%;
@@ -437,19 +437,19 @@ nav > div:last-child a.active {
     transition: all 200ms ease-in-out;
 }
 
-#input tbody th i::before {
+#input tbody th a::before {
     transform: translateX(-50%) rotate(-45deg);
 }
 
-#input tbody th i::after {
+#input tbody th a::after {
     transform: translateX(-50%) rotate(45deg);
 }
 
-#input tbody.collapsed th i::before {
+#input tbody.collapsed th a::before {
     transform: translateX(-50%);
 }
 
-#input tbody.collapsed th i::after {
+#input tbody.collapsed th a::after {
     transform: translateX(-50%) rotate(90deg);
 }
 
