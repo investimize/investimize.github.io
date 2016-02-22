@@ -290,6 +290,7 @@ Vue.component('vis-graph', {
                 top: 40,
                 right: 75,
                 full_width: true,
+                transition_on_update: false,
                 aggregate_rollover: false, // TODO: set this to true and rewrite mouseover
                 markers: [{'date': new Date('2009-03-31'), 'label': 'Trough of the 2008 crisis'}],
                 mouseover: function(d, i) {
