@@ -304,7 +304,7 @@ nav > div:last-child a.active {
 
 /* Input. */
 
-#input, #output {
+#input {
     padding: 1em;
     box-sizing: border-box;
 }
@@ -313,7 +313,7 @@ nav > div:last-child a.active {
     color: white;
     font-size: 0.75em;
     box-shadow: 1px 0 3px rgba(0,0,0,0.12), 1px 0 2px rgba(0,0,0,0.24);
-    background: #007A66;
+    background: #00DBB7;
     background: -moz-linear-gradient(-45deg, #00E677 0%, #00DBB7 100%);
     background: -webkit-linear-gradient(-45deg, #00E677 0%, #00DBB7 100%);
     background: linear-gradient(135deg, #00E677 0%, #00DBB7 100%);
@@ -348,12 +348,14 @@ nav > div:last-child a.active {
     border-collapse: collapse;
 }
 
-#input tbody {
-    border-top: 1em solid transparent;
+#input tbody::after {
+    content: '';
+    display: block;
+    height: 1.2em;
 }
 
 #input tr {
-    border-top: 0.25em solid transparent;
+    border-top: 0.4em solid transparent;
 }
 
 #input td, #input th {
@@ -469,6 +471,10 @@ nav > div:last-child a.active {
 
 /* Output. */
 
+#output td:nth-child(2), #output th:nth-child(2) {
+    display: none;
+}
+
 @media (min-width: 70em) {
 
     .vis-row {
@@ -486,4 +492,85 @@ nav > div:last-child a.active {
         width: 40%;
     }
 
+    #output td:nth-child(2), #output th:nth-child(2) {
+        display: table-cell;
+    }
+
+}
+
+#output {
+    padding: 2em;
+    box-sizing: border-box;
+    font-size: 0.7em;
+}
+
+#portfolio {
+    text-align: left;
+    width: 100%;
+}
+
+#portfolio tr:hover td {
+    background: rgba(4, 13, 20, 0.05);
+}
+
+#portfolio th {
+    border-bottom: 1px solid rgb(4, 13, 20);
+}
+
+#portfolio td, #portfolio th {
+    position: relative;
+    white-space: nowrap;
+    vertical-align: middle;
+    line-height: 3em;
+    text-align: right;
+}
+
+#portfolio td:not(:nth-child(3)) {
+    width: 1%;
+}
+
+
+#portfolio td, #portfolio th {
+    padding-left: 0.75em;
+    padding-right: 0.75em;
+}
+
+#portfolio td:nth-child(3), #portfolio th:nth-child(3) {
+    text-align: left;
+}
+
+#portfolio td:nth-child(4), #portfolio th:nth-child(4),
+#portfolio td:nth-child(5), #portfolio th:nth-child(5) {
+    text-align: center;
+}
+
+#portfolio td > div {
+    position: absolute;
+    top: 0;
+    left: 0.7em;
+    bottom: 0;
+    right: 0.7em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#portfolio .abbrev {
+    font-style: normal;
+    font-size: 0.7em;
+    display: inline-block;
+    width: 2.3em;
+    height: 2.3em;
+    line-height: 2.5em;
+    text-align: center;
+    background: #ddd;
+    border-radius: 50%;
+    vertical-align: middle;
+}
+
+#portfolio .abbrev span {
+    width: initial !important;
+    white-space: nowrap;
+    font-size: initial;
+    width: 7em;
 }

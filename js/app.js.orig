@@ -155,7 +155,7 @@ Vue.component('investimize-parameters', {
                 tostring="(100 * x).toFixed(0)+\'%\'"></double-input-range> \
             </td> \
         </tr></tbody> \
-        <tbody id="sector" :class="{\'collapsed\': collapsed.advanced}"> \
+        <tbody id="advanced" :class="{\'collapsed\': collapsed.advanced}"> \
         <tr> \
             <th>Advanced</th> \
             <th><div><a v-on:click="collapse(\'advanced\')"></a></div></th> \
@@ -189,9 +189,11 @@ var locale = d3.locale({
 });
 
 Vue.component('vis-graph', {
-    props: ['solution', 'benchmarks', 'invested'],
+<<<<<<< HEAD
+    props: ['solution', 'benchmarks'],
     data: function() {
         return {
+            invested: 10000,
             chartData: {
                 portfolioCurve: [],
                 etfCurves: [],
@@ -199,6 +201,9 @@ Vue.component('vis-graph', {
             }
         };
     },
+=======
+    props: ['solution', 'invested'],
+>>>>>>> d5ce1b89b1f1e3a4847ff1f92577d7ff9a23f728
     methods: {
         refreshBenchmarkData: function() {
             var invested = this.invested;
@@ -266,7 +271,26 @@ Vue.component('vis-graph', {
         },
         drawChart: function() {
             var date_format = d3.time.format("%B %Y");
+<<<<<<< HEAD
+            var locale = d3.locale({
+                decimal: '.',
+                thousands: ' ',
+                grouping: [3],
+                currency: ['€', ''],
+                dateTime: '',
+                date: '',
+                time: '',
+                periods: [],
+                days: [],
+                shortDays: [],
+                months: [],
+                shortMonths: []
+            });
+            
+            console.log(this.chartData.benchmarkCurves);
+=======
             var value_format = locale.numberFormat('$n');
+>>>>>>> d5ce1b89b1f1e3a4847ff1f92577d7ff9a23f728
             MG.data_graphic({
                 // data: this.chartData.etfCurves,
                 // legend: this.chartData.legend,
@@ -274,7 +298,7 @@ Vue.component('vis-graph', {
                 data: [this.chartData.portfolioCurve, this.chartData.benchmarkCurves[0]],                
                 // data: this.chartData.portfolioCurve,
                 description: 'This is the graph.',
-                target: '#graph',
+                target: '#graph',                
                 x_accessor: 'date',
                 y_accessor: 'value',
                 yax_units: '€',
@@ -282,31 +306,11 @@ Vue.component('vis-graph', {
                 // width: this.$el.offsetWidth,
                 full_width: true,
                 mouseover: function(d, i) {
-                    var value_format = locale.numberFormat('$n');
-                    var prefix = d3.formatPrefix(d.value);
                     d3.select('#graph svg .mg-active-datapoint').text(
                         date_format(d.date) + '   ' +
                         value_format(Math.round(100 * Math.round(d.value / 100))));
                 }
             });
-        }
-    },
-    computed: {
-        growth: function() {
-            var date = this.solution.portfolio[0].timeseries.date.map(
-                function(date) { return new Date(date); });
-            var invested = this.invested;
-            var price = d3.zip.apply(null, this.solution.portfolio.map(
-                function(etf) {
-                    return etf.timeseries.price.map(function(price) {
-                        return invested * etf.weight * price;
-                    });
-                })).map(function(prices) { return d3.sum(prices); });
-            var growth = d3.zip(date, price).map(
-                function(datum) {
-                    return {date: datum[0], value: datum[1]};
-                });
-            return growth;
         }
     },
     watch: {
@@ -347,9 +351,6 @@ Vue.component('vis-table', {
     template: '\
             <table id="portfolio"> \
                 <thead> \
-                    <tr><th colspan="3"> \
-                        <a href="{{ solution.xray }}">X-ray</a> \
-                    </th></tr> \
                     <tr> \
                         <th></th> \
                         <th>Amount</th> \
@@ -360,6 +361,13 @@ Vue.component('vis-table', {
                 </thead> \
                 <tbody> \
                     <tr v-for="etf in solution.portfolio"> \
+<<<<<<< HEAD
+                        <td>{{ etf.isin }}</td> \
+                        <td>{{ etf.metadata.name }}</td> \
+                        <td>{{ etf.weight }}</td> \
+                        <td>{{ etf.metadata.stars }}</td> \
+                        <td>{{ etf.metadata.ongoing_charge }}</td> \
+=======
                         <td>{{ Math.round(100 * etf.weight)+\'%\' }}</td> \
                         <td>{{ computeInvested(etf.weight) }}</td> \
                         <td><div>{{ etf.metadata.name }}</div></td> \
@@ -376,6 +384,7 @@ Vue.component('vis-table', {
                                 v-if="abbrev(etf.metadata.investimize_region)">{{ abbrev(etf.metadata.investimize_region) }} \
                                 <span>{{ etf.metadata.investimize_region }}</span> \
                             </i></td> \
+>>>>>>> d5ce1b89b1f1e3a4847ff1f92577d7ff9a23f728
                     </tr> \
                 </tbody> \
           </table>'
@@ -427,8 +436,8 @@ var app = Vue.extend({
     },
     methods: {
         stringify: function(val) {
-                return JSON.stringify(val);
-            },
+            return JSON.stringify(val);
+        },
         fetchPortfolio: function() {
             this.$http.post('portfolio?verbose=true', this.params).then(function(response) {
                 this.solution = response.data;
@@ -469,7 +478,13 @@ var app = Vue.extend({
             </div> \
             <div id="output"> \
                 <div class="vis-row"> \
-                    <div class="vis-col"><vis-graph :invested="invested" :solution="solution" :benchmarks="benchmarks"></vis-graph></div> \
+<<<<<<< HEAD
+                    <div class="vis-col"><vis-graph :solution="solution" :benchmarks="benchmarks"></vis-graph></div> \
+=======
+                    <div class="vis-col"> \
+                        <vis-graph :solution="solution" :invested="invested"></vis-graph> \
+                    </div> \
+>>>>>>> d5ce1b89b1f1e3a4847ff1f92577d7ff9a23f728
                     <div class="vis-col">Bar</div> \
                 </div> \
                 <vis-table :solution="solution" :invested="invested"></vis-table> \
