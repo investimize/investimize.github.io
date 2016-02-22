@@ -175,67 +175,111 @@ Vue.component('investimize-parameters', {
 
 Vue.component('vis-graph', {
     props: ['solution'],
+    data: function() {
+        return {
+            invested: 10000
+        };
+    },
     methods: {
         drawChart: function(x) {
-          var chartData = [];
-          var chartLegend = [];
-          this.solution.portfolio.forEach(function(asset) {
-            var isin = asset.isin;
-            var series = asset.timeseries;
-            series = d3.zip(series.date, series.price).map(function(arr) {
-              var obj = {};
-              obj.date = new Date(arr[0]);
-              obj.value = asset.weight * arr[1];
-              return obj;
+            var chartData = [], chartLegend = [];
+            this.solution.portfolio.forEach(function(etf) {
+                var isin = etf.isin;
+                var series = etf.timeseries;
+                series = d3.zip(series.date, series.price).map(
+                    function(arr) {
+                        var obj = {};
+                        obj.date = new Date(arr[0]);
+                        obj.value = etf.weight * arr[1];
+                        return obj;
+                    });
+                chartLegend.push(isin);
+                chartData.push(series);
             });
-            chartLegend.push(isin);
-            chartData.push(series);
-          });
-
-          MG.data_graphic({
-            data: chartData,
-            legend: chartLegend,
-            description: 'This is the graph.',
-            target: '#graph',
-            x_accessor: 'date',
-            y_accessor: 'value'
-          });
+            var date_format = d3.time.format("%B %Y");
+            var locale = d3.locale({
+                decimal: '.',
+                thousands: ' ',
+                grouping: [3],
+                currency: ['€', ''],
+                dateTime: '',
+                date: '',
+                time: '',
+                periods: [],
+                days: [],
+                shortDays: [],
+                months: [],
+                shortMonths: []
+            });
+            MG.data_graphic({
+                data: this.growth,
+                //legend: chartLegend,
+                description: 'This is the graph.',
+                target: '#graph',
+                x_accessor: 'date',
+                y_accessor: 'value',
+                yax_units: '€',
+                height: 400,
+                width: this.$el.offsetWidth,
+                mouseover: function(d, i) {
+                    var value_format = locale.numberFormat('$n');
+                    var prefix = d3.formatPrefix(d.value);
+                    d3.select('#graph svg .mg-active-datapoint').text(
+                        date_format(d.date) + '   ' +
+                        value_format(Math.round(100 * Math.round(d.value / 100))));
+                }
+            });
+        }
+    },
+    computed: {
+        growth: function() {
+            var date = this.solution.portfolio[0].timeseries.date.map(
+                function(date) { return new Date(date); });
+            var invested = this.invested;
+            var price = d3.zip.apply(null, this.solution.portfolio.map(
+                function(etf) {
+                    return etf.timeseries.price.map(function(price) {
+                        return invested * etf.weight * price;
+                    });
+                })).map(function(prices) { return d3.sum(prices); });
+            var growth = d3.zip(date, price).map(
+                function(datum) {
+                    return {date: datum[0], value: datum[1]};
+                });
+            return growth;
         }
     },
     watch: {
-        'solution': function() {
+        solution: function() {
             // TODO: only draw chart if solution is not an empty object
             this.drawChart();
         }
     },
-    template: ' \
-        <div class="graphWrapper"> \
-            <div id="graph"></div> \
-        </div>'
+    template: '<div id="graph"></div>'
 });
 
 Vue.component('vis-table', {
     props: ['solution'],
-    template: ' \
-        <div class="tableWrapper"> \
+    template: '\
             <table> \
                 <thead> \
-                  <tr> \
-                    <th>isin</th> \
-                    <th>name</th> \
-                    <th>weight</th> \
-                  </tr> \
+                    <tr><th colspan="3"> \
+                        <a href="{{ solution.xray }}">X-ray</a> \
+                    </th></tr> \
+                    <tr> \
+                        <th>isin</th> \
+                        <th>name</th> \
+                        <th>weight</th> \
+                    </tr> \
                 </thead> \
                 <tbody> \
-                  <tr v-for="etf in solution.portfolio"> \
-                    <th>{{ etf.isin }}</th> \
-                    <th>{{ etf.metadata.name }}</th> \
-                    <th>{{ etf.weight }}</th> \
-                  </tr> \
+                    <tr v-for="etf in solution.portfolio"> \
+                        <td>{{ etf.isin }}</td> \
+                        <td>{{ etf.metadata.name }}</td> \
+                        <td>{{ etf.weight }}</td> \
+                    </tr> \
                 </tbody> \
-          </table> \
-          <p><a href="{{ solution.xray }}">{{ solution.xray }}</a></p> \
-        </div>'
+          </table>'
 });
 
 var app = Vue.extend({
@@ -281,15 +325,15 @@ var app = Vue.extend({
     },
     methods: {
         stringify: function(val) {
-            return JSON.stringify(val);
-        },
+                return JSON.stringify(val);
+            },
         fetchPortfolio: function() {
-            this.$http.post('portfolio?verbose=true', this.params).then(function(response) {
-            this.solution = response.data;
-          }, function(response) {
-            console.log('error', response);
-          });
-        }
+                this.$http.post('portfolio?verbose=true', this.params).then(function(response) {
+                    this.solution = response.data;
+                }, function(response) {
+                    console.log('error', response);
+                });
+            }
     },
     template: ' \
         <div class="vue-wrapper"> \
@@ -301,8 +345,10 @@ var app = Vue.extend({
                 <a href="#" class="chiclet" onclick="return false" v-on:click="fetchPortfolio()">Update <i class="fa fa-chevron-circle-right"></i></a> \
             </div> \
             <div id="output"> \
-                {{stringify(params)}} \
-                <vis-graph :solution="solution"></vis-graph> \
+                <div class="vis-row"> \
+                    <div class="vis-col"><vis-graph :solution="solution"></vis-graph></div> \
+                    <div class="vis-col">Bar</div> \
+                </div> \
                 <vis-table :solution="solution"></vis-table> \
             </div> \
         </div>'

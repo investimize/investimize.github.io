@@ -1,11 +1,6 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:300,400,500,700);
 @import url(https://fonts.googleapis.com/css?family=Gudea:300,400,500);
 
-/* Always show scrollbar. */
-html {
-    overflow-y: scroll;
-}
-
 /* Remove 300ms click delay on touch devices.
    http://patrickhlauke.github.io/touch/tests/results/#suppressing-300ms-delay */
 a, button, label {
@@ -307,10 +302,11 @@ nav > div:last-child a.active {
     max-width: 15em;
 }
 
-/* Input and output. */
+/* Input. */
 
 #input, #output {
     padding: 1em;
+    box-sizing: border-box;
 }
 
 #input {
@@ -328,7 +324,6 @@ nav > div:last-child a.active {
 
     #input, #output {
         position: absolute;
-        box-sizing: border-box;
     }
 
     #output {
@@ -470,4 +465,25 @@ nav > div:last-child a.active {
     vertical-align: middle;
     margin-right: 0.5em;
     margin-bottom: 2em;
+}
+
+/* Output. */
+
+@media (min-width: 70em) {
+
+    .vis-row {
+        display: table;
+        table-layout: fixed;
+        width: 100%;
+    }
+
+    .vis-col {
+        display: table-cell;
+        border: 1px solid red;
+    }
+
+    .vis-col:last-child {
+        width: 40%;
+    }
+
 }
