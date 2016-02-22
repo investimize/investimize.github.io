@@ -58,7 +58,7 @@ Vue.component('double-input-range', {
 });
 
 Vue.component('investimize-parameters', {
-    props: ['params'],
+    props: ['params', 'invested'],
     data: function() {
         return {
             collapsed: {
@@ -76,6 +76,18 @@ Vue.component('investimize-parameters', {
     },
     template: ' \
         <table> \
+        <tbody><tr> \
+            <th><span class="hint-right"> \
+                Amount \
+                <i class="fa fa-question-circle"></i> \
+                <span>How much you would like to invest.</span> \
+            </span></th> \
+            <th> \
+                <input-range min="1000" max="100000" step="1000" \
+                    :value.sync="invested" \
+                tostring="\'€\'+d3.formatPrefix(x).scale(x)+d3.formatPrefix(x).symbol"></input-range> \
+            </th> \
+        </tr></tbody> \
         <tbody><tr> \
             <th><span class="hint-right"> \
                 Yearly return \
@@ -245,6 +257,9 @@ Vue.component('vis-graph', {
         }
     },
     watch: {
+        invested: function() {
+            this.drawChart();
+        },
         solution: function() {
             // TODO: only draw chart if solution is not an empty object
             this.drawChart();
@@ -258,6 +273,7 @@ Vue.component('vis-table', {
     methods: {
         computeInvested: function(weight) {
             var value_format = locale.numberFormat('$n');
+            weight = Math.round(weight * 100) / 100;
             return value_format(Math.round(weight * this.invested));
         },
         abbrev: function(string) {
@@ -286,7 +302,8 @@ Vue.component('vis-table', {
                     <tr v-for="etf in solution.portfolio"> \
                         <td>{{ Math.round(100 * etf.weight)+\'%\' }}</td> \
                         <td>{{ computeInvested(etf.weight) }}</td> \
-                        <td><div>{{ etf.metadata.name }}</div></td> \
+                        <td><div><a href="http://www.morningstar.be/be/etf/snapshot/snapshot.aspx?id={{etf.metadata.id.morningstar}}">\
+                            {{ etf.metadata.name }}</a></div></td> \
                         <td><i class="hint-left abbrev" \
                                 v-if="abbrev(etf.metadata.investimize_sector) || \
                                 abbrev(etf.metadata.investimize_content)"> \
@@ -365,7 +382,7 @@ var app = Vue.extend({
                 <a style="display:none" class="investimize-logo" v-link="{ path: \'/\', exact: true }"> \
                     <img>\
                 </a> \
-                <investimize-parameters :params.sync="params"></investimize-parameters> \
+                <investimize-parameters :params.sync="params" :invested.sync="invested"></investimize-parameters> \
                 <a href="#" class="chiclet" onclick="return false" v-on:click="fetchPortfolio()">Update <i class="fa fa-chevron-circle-right"></i></a> \
             </div> \
             <div id="output"> \

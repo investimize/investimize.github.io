@@ -314,18 +314,22 @@ circle.mg-points-mono {
 
 .mg-x-axis line,
 .mg-y-axis line {
-    opacity: 1;
+    opacity: 0.4;
     shape-rendering: auto;
-    stroke: #b3b2b2;
+    stroke: rgb(4, 13, 20);
     stroke-width: 1px;
+}
+
+line.mg-xax-ticks, line.mg-yax-ticks, .mg-y-axis > line:not(:first-child) {
+    
 }
 
 .mg-x-axis text,
 .mg-y-axis text,
 .mg-histogram .axis text {
-    fill: black;
+    fill: rgb(4, 13, 20);
     font-size: 0.9rem;
-    opacity: 0.6;
+    opacity: 1;
 }
 
 .mg-x-axis .label,
