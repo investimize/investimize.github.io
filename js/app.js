@@ -213,7 +213,7 @@ Vue.component('vis-graph', {
     },
     methods: {
         refreshBenchmarkData: function() {
-            this.chartData.benchmarkCurves = [];
+            var benchmarkCurves = [];
             var invested = this.invested;
             this.benchmarks.forEach(function(benchmarkCurve) {
               var benchmarkCurve = d3.zip(benchmarkCurve.timeseries.date, benchmarkCurve.timeseries.price).map(function(arr) {
@@ -222,8 +222,9 @@ Vue.component('vis-graph', {
                   obj.value = invested * arr[1];
                   return obj;
               });
-              this.chartData.benchmarkCurves.push(benchmarkCurve);
+              benchmarkCurves.push(benchmarkCurve);
             }, this);
+            this.chartData.benchmarkCurves = benchmarkCurves;
         },
         refreshPortfolioData: function() {
             // TODO: check if solution is not an empty object
@@ -283,7 +284,8 @@ Vue.component('vis-graph', {
             MG.data_graphic({
                 // data: this.chartData.etfCurves,
                 // legend: this.chartData.legend,
-                data: [this.chartData.portfolioCurve, this.chartData.benchmarkCurves[0]],                
+                // data: [].concat.apply([], this.chartData.benchmarkCurves),
+                data: [this.chartData.portfolioCurve, this.chartData.benchmarkCurves[0]],
                 legend: ['Portfolio', 'MSCI World'],
                 legend_target: '#legend',
                 description: 'This is the graph.',
@@ -304,24 +306,6 @@ Vue.component('vis-graph', {
                         value_format(Math.round(100 * Math.round(d.value / 100))));
                 }
             });
-        }
-    },
-    computed: {
-        growth: function() {
-            var date = this.solution.portfolio[0].timeseries.date.map(
-                function(date) { return new Date(date); });
-            var invested = this.invested;
-            var price = d3.zip.apply(null, this.solution.portfolio.map(
-                function(etf) {
-                    return etf.timeseries.price.map(function(price) {
-                        return invested * etf.weight * price;
-                    });
-                })).map(function(prices) { return d3.sum(prices); });
-            var growth = d3.zip(date, price).map(
-                function(datum) {
-                    return {date: datum[0], value: datum[1]};
-                });
-            return growth;
         }
     },
     watch: {
@@ -455,7 +439,7 @@ var app = Vue.extend({
             });
         },
         fetchBenchmarks: function () {
-            var benchmarkIsins = ['IE00B296QM64'];
+            var benchmarkIsins = ['IE00B296QM64', 'FR0010510800'];
             benchmarkIsins.forEach(function(benchmarkIsin) {
                 this.$http.get('etfs/' + benchmarkIsins[0] + '?verbose=true').then(function(response) {
                     this.benchmarks.push({
