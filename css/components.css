@@ -18,12 +18,12 @@ div.input-range > label {
 
 div.input-range > label:first-child {
     right: 100%;
-    transform: translateY(-50%) translateX(-5px);
+    transform: translateY(-50%) translateY(2px) translateX(-5px);
 }
 
 div.input-range > label:last-child {
     left: 100%;
-    transform: translateY(-50%) translateX(5px);
+    transform: translateY(-50%) translateY(2px) translateX(5px);
 }
 
 div.input-range > input {
@@ -32,6 +32,7 @@ div.input-range > input {
     appearance: none;
     margin: 0;
     padding: 0;
+    margin-top: 2px;
     font: inherit;
     width: 100%;
     height: 100%;
@@ -186,7 +187,7 @@ div.input-range > input:nth-child(2)::-ms-fill-upper {
 }
 
 button.chiclet:disabled,
-.chiclet.disabled {
+a.chiclet.disabled {
     color: rgba(0, 0, 0, 0.35);
 }
 
@@ -214,7 +215,8 @@ a.chiclet:not(.disabled):active {
     border-top-color: #eee;
 }
 
-.chiclet:focus {
+button.chiclet:not(.nofocus):focus,
+a.chiclet:not(.nofocus):focus {
     outline: 0;
     box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.05),
         0 1px 0 #c3c3c3,
@@ -224,7 +226,8 @@ a.chiclet:not(.disabled):active {
         0 3px 0 5px rgba(0, 0, 0, 0.07);
 }
 
-.chiclet:focus:hover {
+button.chiclet:not(.nofocus):focus:hover,
+a.chiclet:not(.nofocus):focus:hover {
     box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.05),
         0 1px 0 #c3c3c3,
         0 2px 0 #c6c6c6,
@@ -234,11 +237,38 @@ a.chiclet:not(.disabled):active {
 
 /* Safari does not seem to get focus on click.
    https://gist.github.com/cvrebert/68659d0333a578d75372 */
-button.chiclet:enabled:focus:active,
-a.chiclet:not(.disabled):focus:active {
+button.chiclet:not(.nofocus):enabled:focus:active,
+a.chiclet:not(.nofocus):not(.disabled):focus:active {
     box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.10),
         0 0 4px -1px #333,
         0 0 0 5px rgba(0, 0, 0, 0.07);
+}
+
+button.chiclet.light:focus,
+a.chiclet.light:focus {
+    outline: 0;
+    box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.05),
+        0 1px 0 #c3c3c3,
+        0 2px 0 #c6c6c6,
+        0 3px 0 #c9c9c9,
+        0 3px 4px -1px #333,
+        0 3px 0 5px rgba(0, 0, 0, 0.05);
+}
+
+button.chiclet.light:focus:hover,
+a.chiclet.light:focus:hover {
+    box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.05),
+        0 1px 0 #c3c3c3,
+        0 2px 0 #c6c6c6,
+        0 2px 4px -1px #333,
+        0 2px 0 5px rgba(0, 0, 0, 0.05);
+}
+
+button.chiclet.light:enabled:focus:active,
+a.chiclet.light:not(.disabled):focus:active {
+    box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.10),
+        0 0 4px -1px #333,
+        0 0 0 5px rgba(0, 0, 0, 0.05);
 }
 
 /* Material hamburger button. */
@@ -248,14 +278,14 @@ a.chiclet:not(.disabled):focus:active {
 }
 
 .hamburger {
-    width: 51px;
-    height: 51px;
+    width: 2.6em;
+    height: 2.6em;
     display: inline-block;
     background: #f7f7f7;
     border-radius: 50%;
     position: relative;
     top: -4px;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.02), 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
     vertical-align: middle;
     transition: all 200ms ease;
     cursor: pointer;
@@ -263,16 +293,16 @@ a.chiclet:not(.disabled):focus:active {
     -webkit-backface-visibility: hidden; /* Fix 1px shift bug on Chrome. */
 }
 
-/* .hamburger:hover {
+.hamburger:hover {
     transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
-} */
+    box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.02), 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
 
 .hamburger > i {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 25px;
+    width: 50%;
     height: 2px;
     background: #333;
     border-radius: 1px;
@@ -281,7 +311,8 @@ a.chiclet:not(.disabled):focus:active {
 }
 
 .hamburger > i:first-child {
-    margin-top: -9px;
+    margin-top: -0.4em;
+    transform: translateX(-50%) translateY(-1px);
 }
 
 .hamburger > i:nth-child(2), .hamburger > i:nth-child(3) {
@@ -289,7 +320,8 @@ a.chiclet:not(.disabled):focus:active {
 }
 
 .hamburger > i:last-child {
-    margin-top: 7px;
+    margin-top: 0.4em;
+    transform: translateX(-50%)  translateY(-1px);
 }
 
 #hamburger:checked ~ .hamburger > i:first-child, #hamburger:checked ~ .hamburger > i:last-child {

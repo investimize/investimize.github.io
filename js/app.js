@@ -58,6 +58,7 @@ Vue.component('double-input-range', {
 });
 
 Vue.component('investimize-parameters', {
+    props: ['params'],
     data: function() {
         return {
             collapsed: {
@@ -65,38 +66,6 @@ Vue.component('investimize-parameters', {
                 region: false,
                 sector: true,
                 advanced: true
-            },
-            params: {
-                weight: [0.05, 0.25],
-                'return': 0.10,
-                backtest: 0,
-                allow_short: true,
-                allow_leveraged: true,
-                content: {
-                    'Stocks': [0.0, 1.0],
-                    'Bonds': [0.0, 0.4],
-                    'Cash': [0.0, 0.25],
-                    'Commodities': [0.0, 1.0],
-                    'Real Estate': [0.0, 1.0]
-                },
-                sector: {
-                    'Communication Services': [0.0, 1.0],
-                    'Consumer Cyclical': [0.0, 1.0],
-                    'Consumer Defensive': [0.0, 1.0],
-                    'Energy': [0.0, 1.0],
-                    'Financial Services': [0.0, 1.0],
-                    'Healthcare': [0.0, 1.0],
-                    'Industrials': [0.0, 1.0],
-                    'Technology': [0.0, 1.0],
-                    'Utilities': [0.0, 1.0]
-                },
-                region: {
-                    'Asia': [0.0, 0.66],
-                    'Emerging': [0.0, 0.66],
-                    'Europe': [0.1, 1.0],
-                    'North America': [0.2, 1.0],
-                    'Oceania': [0.0, 0.66]
-                },
             }
         };
     },
@@ -185,16 +154,59 @@ Vue.component('investimize-parameters', {
 });
 
 var app = Vue.extend({
+    data: function() {
+        return {
+            params: {
+                weight: [0.05, 0.25],
+                'return': 0.10,
+                backtest: 0,
+                allow_short: true,
+                allow_leveraged: true,
+                content: {
+                    'Stocks': [0.0, 1.0],
+                    'Bonds': [0.0, 0.4],
+                    'Cash': [0.0, 0.25],
+                    'Commodities': [0.0, 1.0],
+                    'Real Estate': [0.0, 1.0]
+                },
+                sector: {
+                    'Communication Services': [0.0, 1.0],
+                    'Consumer Cyclical': [0.0, 1.0],
+                    'Consumer Defensive': [0.0, 1.0],
+                    'Energy': [0.0, 1.0],
+                    'Financial Services': [0.0, 1.0],
+                    'Healthcare': [0.0, 1.0],
+                    'Industrials': [0.0, 1.0],
+                    'Technology': [0.0, 1.0],
+                    'Utilities': [0.0, 1.0]
+                },
+                region: {
+                    'Asia': [0.0, 0.66],
+                    'Emerging': [0.0, 0.66],
+                    'Europe': [0.1, 1.0],
+                    'North America': [0.2, 1.0],
+                    'Oceania': [0.0, 0.66]
+                },
+            }
+        };
+    },
+    methods: {
+        stringify: function(val) {
+            return JSON.stringify(val);
+        }
+    },
     template: ' \
         <div class="vue-wrapper"> \
             <div id="input"> \
                 <a class="investimize-logo" v-link="{ path: \'/\', exact: true }"> \
-                    <img> \
+                    <img>\
                 </a><br> \
-                <investimize-parameters></investimize-parameters> \
+                <investimize-parameters :params.sync="params"></investimize-parameters> \
                 <a href="#" class="chiclet">Update <i class="fa fa-chevron-circle-right"></i></a> \
             </div> \
-            <div id="output"></div> \
+            <div id="output"> \
+                {{stringify(params)}} \
+            </div> \
         </div>'
 });
 
@@ -207,7 +219,7 @@ var hero = Vue.extend({
                 <h1>Investimize</h1> \
                 <h2>Low cost passive investing, \
                 algorithmically optimized to fit your preferences</h2> \
-                <a class="chiclet" v-link="{ path: \'/app\' }">Get my portfolio <i class="fa fa-chevron-circle-right"></i></a>\
+                <a class="chiclet nofocus" v-link="{ path: \'/app\' }">Get my portfolio <i class="fa fa-chevron-circle-right"></i></a>\
             </div> \
         </div> \
         <div id="features" class="slanted row"> \

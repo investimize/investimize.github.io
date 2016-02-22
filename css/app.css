@@ -49,9 +49,9 @@ body {
     font-weight: 300;
     line-height: 1.3;
 }
-@media (max-width: 375px) { /* <= iPhone 6 */
+@media (max-width: 450px) { /* <= iPhone 6+ */
     body {
-        font-size: 20px;
+        font-size: 18px;
     }
 }
 
@@ -394,7 +394,7 @@ nav > div:last-child a.active {
     overflow: visible;
 }
 
-#input tbody th:last-child div {
+#input tbody th:last-child div:not(.input-range) {
     position: absolute;
     top: 0;
     left: 0;
@@ -476,8 +476,4 @@ nav > div:last-child a.active {
     vertical-align: middle;
     margin-right: 0.5em;
     margin-bottom: 2em;
-}
-
-#input a.chiclet {
-    margin-top: 2em;
 }
