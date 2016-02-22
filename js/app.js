@@ -383,8 +383,8 @@ Vue.component('vis-table', {
 
 var app = Vue.extend({
     http: {
-        // root: 'http://startup-master-mqxgysywwr.elasticbeanstalk.com/api/v0.1' // API root
-        root: 'http://localhost:8000/api/v0.1' // API root
+        root: 'http://startup-master-mqxgysywwr.elasticbeanstalk.com/api/v0.1' // API root
+        // root: 'http://localhost:8000/api/v0.1' // API root
     },
     data: function() {
         return {
