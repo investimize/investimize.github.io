@@ -173,7 +173,75 @@ Vue.component('investimize-parameters', {
         </table>'
 });
 
+Vue.component('vis-graph', {
+    props: ['solution'],
+    methods: {
+        drawChart: function(x) {
+          var chartData = [];
+          var chartLegend = [];
+          this.solution.portfolio.forEach(function(asset) {
+            var isin = asset.isin;
+            var series = asset.timeseries;
+            series = d3.zip(series.date, series.price).map(function(arr) {
+              var obj = {};
+              obj.date = new Date(arr[0]);
+              obj.value = asset.weight * arr[1];
+              return obj;
+            });
+            chartLegend.push(isin);
+            chartData.push(series);
+          });
+
+          MG.data_graphic({
+            data: chartData,
+            legend: chartLegend,
+            description: 'This is the graph.',
+            target: '#graph',
+            x_accessor: 'date',
+            y_accessor: 'value'
+          });
+        }
+    },
+    watch: {
+        'solution': function() {
+            // TODO: only draw chart if solution is not an empty object
+            this.drawChart();
+        }
+    },
+    template: ' \
+        <div class="graphWrapper"> \
+            <div id="graph"></div> \
+        </div>'
+});
+
+Vue.component('vis-table', {
+    props: ['solution'],
+    template: ' \
+        <div class="tableWrapper"> \
+            <table> \
+                <thead> \
+                  <tr> \
+                    <th>isin</th> \
+                    <th>name</th> \
+                    <th>weight</th> \
+                  </tr> \
+                </thead> \
+                <tbody> \
+                  <tr v-for="etf in solution.portfolio"> \
+                    <th>{{ etf.isin }}</th> \
+                    <th>{{ etf.metadata.name }}</th> \
+                    <th>{{ etf.weight }}</th> \
+                  </tr> \
+                </tbody> \
+          </table> \
+          <p><a href="{{ solution.xray }}">{{ solution.xray }}</a></p> \
+        </div>'
+});
+
 var app = Vue.extend({
+    http: {
+        root: 'http://startup-master-mqxgysywwr.elasticbeanstalk.com/api/v0.1' // API root
+    },
     data: function() {
         return {
             params: {
@@ -207,12 +275,20 @@ var app = Vue.extend({
                     'North America': [0.2, 1.0],
                     'Oceania': [0.0, 0.66]
                 },
-            }
+            },
+            solution: {}
         };
     },
     methods: {
         stringify: function(val) {
             return JSON.stringify(val);
+        },
+        fetchPortfolio: function() {
+            this.$http.post('portfolio?verbose=true', this.params).then(function(response) {
+            this.solution = response.data;
+          }, function(response) {
+            console.log('error', response);
+          });
         }
     },
     template: ' \
@@ -222,10 +298,12 @@ var app = Vue.extend({
                     <img>\
                 </a><br> \
                 <investimize-parameters :params.sync="params"></investimize-parameters> \
-                <a href="#" class="chiclet">Update <i class="fa fa-chevron-circle-right"></i></a> \
+                <a href="#" class="chiclet" onclick="return false" v-on:click="fetchPortfolio()">Update <i class="fa fa-chevron-circle-right"></i></a> \
             </div> \
             <div id="output"> \
                 {{stringify(params)}} \
+                <vis-graph :solution="solution"></vis-graph> \
+                <vis-table :solution="solution"></vis-table> \
             </div> \
         </div>'
 });
