@@ -264,7 +264,7 @@ nav > div:last-child a.active {
     border: 2px solid rgba(4, 13, 20, 0.1);
     /*background: #fcfcfc;*/
     cursor: pointer;
-    transition: all 100ms ease;
+    transition: box-shadow 100ms ease;
     /*box-shadow: inset 0 0 2em rgba(0, 0, 0, 0.08);*/
 }
 
@@ -281,10 +281,18 @@ nav > div:last-child a.active {
     }
 }
 
-#hero table div:hover, #hero table div.active {
+#hero table div:hover {
     /*border-color: rgba(4, 14, 20, 0.6);*/
     /*background: #fefefe;*/
-    box-shadow: inset 0 0 0 5px rgba(0, 0, 0, 0.09);
+    box-shadow: inset 0 0 0 5px rgba(4, 13, 20, 0.1);
+    transition: none;
+}
+
+#hero table div.active {
+    /*border-color: rgba(4, 14, 20, 0.6);*/
+    /*background: #fefefe;*/
+    border-color: #00DBB7;
+    box-shadow: inset 0 0 0 5px #00DBB7;
 }
 
 #hero table img {

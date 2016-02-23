@@ -576,9 +576,12 @@ Vue.component('questions-alt', {
                 </h3> \
                 <table> \
                     <tr> \
-                        <td><div :class="{ \'active\': answers.goal == \'save\' }" v-on:click="answers.goal = \'save\'"><img src="img/notes.svg">Just to save</div></td> \
-                        <td><div :class="{ \'active\': answers.goal == \'bigspend\' }" v-on:click="answers.goal = \'bigspend\'"><img src="img/house.svg">For a big spend</div></td> \
-                        <td><div :class="{ \'active\': answers.goal == \'retirement\' }" v-on:click="answers.goal = \'retirement\'"><img src="img/safe.svg">For my retirement</div></td> \
+                        <td><div :class="{ \'active\': answers.goal == \'save\' }" v-on:click="answers.goal = \'save\'"> \
+                        <img src="img/notes.svg">Just to save</div></td> \
+                        <td><div :class="{ \'active\': answers.goal == \'bigspend\' }" v-on:click="answers.goal = \'bigspend\'"> \
+                        <img src="img/house.svg">For a big spend</div></td> \
+                        <td><div :class="{ \'active\': answers.goal == \'retirement\' }" v-on:click="answers.goal = \'retirement\'"> \
+                        <img src="img/safe.svg">For my retirement</div></td> \
                     </tr>  \
                 <table> \
                 <a class="chiclet nofocus" v-on:click="nextQuestion()">Get my portfolio <i class="fa fa-chevron-circle-right"></i></a>\ \
