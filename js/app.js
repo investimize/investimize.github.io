@@ -279,8 +279,8 @@ Vue.component('vis-graph', {
             var date_format = d3.time.format("%B %Y");
             var value_format = locale.numberFormat('$n');
             MG.data_graphic({
-                data: [this.portfolioCurveInvested ? this.portfolioCurveInvested : [], this.benchmarkCurvesInvested[0]],
-                legend: ['Portfolio', 'MSCI World'],
+                data: [this.benchmarkCurvesInvested[0], this.portfolioCurveInvested ? this.portfolioCurveInvested : []],
+                legend: ['MSCI World', 'Portfolio'],
                 show_tooltips: false,
                 target: '#graph',
                 x_accessor: 'date',
@@ -546,6 +546,55 @@ var app = Vue.extend({
         </div>'
 });
 
+Vue.component('questions-alt', {
+    data: function() {
+        return {
+            currentQuestion: 1,
+            lastQuestion: 3,
+            answers: {
+                plan: 'rich',
+                targetReturn: 0.15,
+                other: 100,
+            }
+        };
+    },
+    methods: {
+        nextQuestion: function() {
+            if (this.currentQuestion < this.lastQuestion) {
+                this.currentQuestion = this.currentQuestion + 1;
+            } else {
+                this.$router.go({ path: 'app', query: this.answers });
+            }
+        },
+        convertAnswersToParams: function () {
+            console.log(this.params);
+            // this.params['return'] = this.answers.targetReturn;
+        }
+    },
+    template: ' \
+            <div v-show="currentQuestion == 1"> \
+                <h3>I am \
+                    <div class="input-text light-bg default-label"> \
+                        <input type="text" size="2" v-model="answers.age"required> \
+                        <label>24</label> \
+                    </div> \
+                    years old and plan to </h3> \
+                <a class="chiclet nofocus" v-on:click="nextQuestion()">Get my portfolio <i class="fa fa-chevron-circle-right"></i></a>\ \
+            </div> \
+            <div v-show="currentQuestion == 2"> \
+                <h4>What is your target return?</h4> \
+                <input type="text" size="2" v-model="answers.targetReturn"> \
+                <a class="chiclet nofocus" v-on:click="nextQuestion()">Next<i class="fa fa-chevron-circle-right"></i></a>\ \
+            </div> \
+            <div v-show="currentQuestion == 3"> \
+                <h4>A third question?</h4> \
+                <input type="text" size="3" v-model="answers.other"> \
+                <a class="chiclet nofocus" v-on:click="nextQuestion()">Next<i class="fa fa-chevron-circle-right"></i></a>\ \
+            </div> \
+            <span>{{ answers | json }}</span> \
+            <span>{{ params | json }}</span>'
+});
+
 var landing = Vue.extend({
     template: ' \
         <div id="landing" class="vue-wrapper"> \
@@ -556,8 +605,8 @@ var landing = Vue.extend({
                 <h2>Low cost passive investing, \
                 algorithmically optimized to fit your preferences</h2> \
             </div> \
-            <div class="col" style="display:none"> \
-                <questions></questions> \
+            <div class="col"> \
+                <questions-alt></questions-alt> \
             </div> \
         </div> \
         <div id="features" class="slanted row"> \

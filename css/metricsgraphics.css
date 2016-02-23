@@ -6,7 +6,8 @@
 }
 
 .mg-area1-color {
-    fill: #0000ff;
+    /*fill: #0000ff;*/
+    fill: rgb(150, 150, 150);
 }
 
 .mg-area2-color {
@@ -159,11 +160,13 @@
 }
 
 .mg-line1-color {
-    stroke: #4040e8;
+    /*stroke: #4040e8;*/
+    stroke: rgb(160, 150, 150);
 }
 
 .mg-hover-line1-color {
-    fill: #4040e8;
+    /*fill: #4040e8;*/
+    fill: rgb(160, 150, 150);
 }
 
 .mg-line2-color {
@@ -205,8 +208,10 @@
 }
 
 .mg-line1-legend-color {
-    color: #4040e8;
-    fill: #4040e8;
+    /*color: #4040e8;
+    fill: #4040e8;*/
+    color: rgb(160, 150, 150);
+    fill: rgb(160, 150, 150);
 }
 
 .mg-line2-legend-color {

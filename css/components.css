@@ -1,3 +1,69 @@
+/* Material design text input */
+
+div.input-text {
+    display: inline-block;
+    position: relative;
+}
+
+div.input-text > input {
+    font: inherit; /* Form elements don't inherit style by default. */
+    line-height: inherit;
+    height: 1.3em; /* http://joshnh.com/weblog/line-height-doesnt-work-as-expected-on-inputs/ */
+    border-radius: 0; /* Reset iOS input border. */
+    border: none;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.6);
+    color: white;
+    background: transparent;
+    transition: all 200ms ease;
+}
+
+div.input-text > input:focus {
+    outline: none;
+    border-bottom-color: white;
+}
+
+div.input-text > label {
+    color: rgba(255, 255, 255, 0.6);
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: all 200ms ease;
+    pointer-events: none;
+    transform-origin: 0 0;
+}
+
+div.input-text > input:focus + label {
+    color: white;
+}
+
+div.input-text > input:focus + label,
+div.input-text > input:valid + label {
+    transform: scale(0.65) translateY(-80%); /* Use transform for 60fps transitions. */
+}
+
+div.input-text.default-label > input:focus + label,
+div.input-text.default-label > input:valid + label {
+    transform: none;
+    opacity: 0;
+}
+
+div.input-text > input {
+    border-bottom: 2px solid rgba(4, 14, 20, 0.6);
+    color: inherit;
+}
+
+div.input-text.light-bg > input:focus {
+    border-bottom-color: rgb(4, 13, 20);
+}
+
+div.input-text.light-bg > label {
+    color: rgba(4, 13, 20, 0.6);
+}
+
+div.input-text.light-bg > input:focus + label {
+    color: inherit;
+}
+
 /* (Two-thumb) input range */
 
 div.input-range {
