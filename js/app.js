@@ -380,7 +380,7 @@ Vue.component('questions', {
             answers: {
                 age: 24,
                 plan: 'rich',
-                targetReturn: 0.15,
+                targetReturn: 0.10,
                 other: 100,
             }
         };
@@ -552,38 +552,33 @@ Vue.component('questions-alt', {
             currentQuestion: 1,
             lastQuestion: 3,
             answers: {
-                plan: 'rich',
-                targetReturn: 0.15,
+                goal: null,
+                targetReturn: 0.1,
                 other: 100,
             }
         };
     },
     methods: {
         nextQuestion: function() {
-            if (this.currentQuestion < this.lastQuestion) {
-                this.currentQuestion = this.currentQuestion + 1;
-            } else {
-                this.$router.go({ path: 'app', query: this.answers });
-            }
+            this.$router.go({ path: 'app', query: this.answers });
         },
         convertAnswersToParams: function () {
             console.log(this.params);
-            // this.params['return'] = this.answers.targetReturn;
         }
     },
     template: ' \
             <div v-show="currentQuestion == 1"> \
                 <h3>I am \
                     <div class="input-text light-bg default-label"> \
-                        <input placeholder="24" type="text" style="width:1.5em;text-align:center" v-model="answers.age"required> \
+                        <input placeholder="28" type="text" style="width:1.5em;text-align:center" v-model="answers.age"required> \
                     </div> \
-                    years old and want to invest for \
+                    years old and want to invest \
                 </h3> \
                 <table> \
                     <tr> \
-                        <td><div><i class="fa fa-money"></i>Just save</div></td> \
-                        <td><div><i class="fa fa-diamond"></i>Big spend</div></td> \
-                        <td><div><i class="fa fa-diamond"></i>Retirement</div></td> \
+                        <td><div :class="{ \'active\': answers.goal == \'save\' }" v-on:click="answers.goal = \'save\'"><img src="img/notes.svg">Just to save</div></td> \
+                        <td><div :class="{ \'active\': answers.goal == \'bigspend\' }" v-on:click="answers.goal = \'bigspend\'"><img src="img/house.svg">For a big spend</div></td> \
+                        <td><div :class="{ \'active\': answers.goal == \'retirement\' }" v-on:click="answers.goal = \'retirement\'"><img src="img/safe.svg">For my retirement</div></td> \
                     </tr>  \
                 <table> \
                 <a class="chiclet nofocus" v-on:click="nextQuestion()">Get my portfolio <i class="fa fa-chevron-circle-right"></i></a>\ \
