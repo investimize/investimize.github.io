@@ -222,6 +222,49 @@ nav > div:last-child a.active {
     font-size: 1.25em;
 }
 
+#hero table {
+    border-collapse: separate;
+    border-spacing: 0em 1.25em;
+}
+
+#hero table td {
+    text-align: left;
+    width: 33.33%;
+    height: 100%;
+    position: relative;
+    vertical-align: top;
+}
+
+#hero table td:not(:last-child) {
+    padding-right: 2em;
+}
+
+#hero table div {
+    display: inline-block;
+    text-align: center;
+    width: 5em;
+    height: 100%;
+    padding: 1em;
+    border-radius: 8px;
+    border: 2px solid rgba(4, 13, 20, 0.5);
+    cursor: pointer;
+    opacity: 0.75;
+/*    box-shadow: inset 0 0 2em rgba(0, 0, 0, 0.08);
+*/}
+
+#hero table div:hover {
+    opacity: 1;
+    /*background: #fefefe;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);*/
+}
+
+#hero table i {
+    display: inline-block;
+    width: 100%;
+    font-size: 2em;
+    line-height: 1.5em;
+}
+
 /* Features */
 
 #features {

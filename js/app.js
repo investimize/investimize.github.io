@@ -575,10 +575,17 @@ Vue.component('questions-alt', {
             <div v-show="currentQuestion == 1"> \
                 <h3>I am \
                     <div class="input-text light-bg default-label"> \
-                        <input type="text" size="2" v-model="answers.age"required> \
-                        <label>24</label> \
+                        <input placeholder="24" type="text" style="width:1.5em;text-align:center" v-model="answers.age"required> \
                     </div> \
-                    years old and plan to </h3> \
+                    years old and want to invest for \
+                </h3> \
+                <table> \
+                    <tr> \
+                        <td><div><i class="fa fa-money"></i>Just save</div></td> \
+                        <td><div><i class="fa fa-diamond"></i>Big spend</div></td> \
+                        <td><div><i class="fa fa-diamond"></i>Retirement</div></td> \
+                    </tr>  \
+                <table> \
                 <a class="chiclet nofocus" v-on:click="nextQuestion()">Get my portfolio <i class="fa fa-chevron-circle-right"></i></a>\ \
             </div> \
             <div v-show="currentQuestion == 2"> \
@@ -590,9 +597,7 @@ Vue.component('questions-alt', {
                 <h4>A third question?</h4> \
                 <input type="text" size="3" v-model="answers.other"> \
                 <a class="chiclet nofocus" v-on:click="nextQuestion()">Next<i class="fa fa-chevron-circle-right"></i></a>\ \
-            </div> \
-            <span>{{ answers | json }}</span> \
-            <span>{{ params | json }}</span>'
+            </div>'
 });
 
 var landing = Vue.extend({
