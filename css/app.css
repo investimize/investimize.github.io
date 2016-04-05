@@ -184,7 +184,7 @@ nav > div:last-child a.active {
 }
 
 #hero .col {
-    margin: 0 2em;
+    margin: 0 3rem;
     padding-top: 0;
     padding-bottom: 0;
 }
@@ -200,7 +200,7 @@ nav > div:last-child a.active {
 #hero h1 {
     position: relative;
     display: inline-block;
-    font-size: 2.5em;
+    font-size: 3em;
     font-weight: 500;
     color: #00D1AE;
     background: -webkit-linear-gradient(-45deg, #00DB71 0%, #00D1AE 100%);
@@ -319,7 +319,7 @@ nav > div:last-child a.active {
 }
 
 #features img {
-    height: 7em;
+    height: 6.5em;
     margin-bottom: 0.75em;
 }
 

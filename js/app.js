@@ -11,8 +11,8 @@ Vue.component('nav-bar', {
                 </label> \
                 <ul> \
                     <li><a v-link="{ path: \'/\', exact: true }">Introducing Investimize</a></li> \
-                    <li><a v-link="{ path: \'/howitworks\' }">How it works</a></li> \
-                    <li><a v-link="{ path: \'/whoweare\' }">Who we are</a></li> \
+                    <li><a v-alink="{ path: \'/howitworks\' }">How it works</a></li> \
+                    <li><a v-alink="{ path: \'/whoweare\' }">Who we are</a></li> \
                     <li><a v-link="{ path: \'/app\' }">Get my portfolio</a></li> \
                 </ul> \
             </div> \
@@ -568,13 +568,13 @@ Vue.component('questions-alt', {
     },
     template: ' \
             <div v-show="currentQuestion == 1"> \
-                <h3>I am \
+                <h3 style="margin-bottom:1em">I am \
                     <div class="input-text light-bg default-label"> \
                         <input placeholder="28" type="text" style="width:1.5em;text-align:center" v-model="answers.age"required> \
                     </div> \
                     years old and want to invest \
                 </h3> \
-                <table> \
+                <table style="display:none"> \
                     <tr> \
                         <td><div :class="{ \'active\': answers.goal == \'save\' }" v-on:click="answers.goal = \'save\'"> \
                         <img src="img/notes.svg">Just to save</div></td> \
@@ -605,8 +605,8 @@ var landing = Vue.extend({
         <div id="hero" class="row"> \
             <div class="col"> \
                 <h1>Investimize</h1> \
-                <h2>Low cost passive investing, \
-                algorithmically optimized to fit your preferences</h2> \
+                <h2>Passive investing,<br>\
+                algorithmically optimized</h2> \
             </div> \
             <div class="col"> \
                 <questions-alt></questions-alt> \
