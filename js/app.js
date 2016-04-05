@@ -560,7 +560,7 @@ Vue.component('questions-alt', {
     },
     methods: {
         nextQuestion: function() {
-            this.$router.go({ path: 'app', query: this.answers });
+            this.$router.go({ path: 'app', query: {} }); //this.answers });
         },
         convertAnswersToParams: function () {
             console.log(this.params);
