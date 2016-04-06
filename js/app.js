@@ -19,6 +19,15 @@ Vue.component('nav-bar', {
         </nav>'
 });
 
+Vue.component('input-checkbox', {
+    props: ['name', 'value'],
+    template: ' \
+        <div class="input-checkbox" style="margin-left: 2em"> \
+            <input type="checkbox" id="{{name}}" v-model="value"> \
+            <label for="{{name}}">{{ value ? "Enabled" : "Disabled" }}</label> \
+        </div>'
+});
+
 Vue.component('input-range', {
     props: ['min', 'max', 'step', 'tostring', 'value'],
     methods: {
@@ -63,10 +72,11 @@ Vue.component('investimize-parameters', {
         return {
             collapsed: {
                 content: false,
-                region: false,
+                region: true,
                 sector: true,
                 advanced: true
-            }
+            },
+            foo: true
         };
     },
     methods: {
@@ -167,21 +177,51 @@ Vue.component('investimize-parameters', {
                 tostring="(100 * x).toFixed(0)+\'%\'"></double-input-range> \
             </td> \
         </tr></tbody> \
-        <tbody id="advanced" :class="{\'collapsed\': collapsed.advanced}"> \
+        <tbody id="advanced"> \
         <tr> \
             <th>Advanced</th> \
-            <th><div><a v-on:click="collapse(\'advanced\')"></a></div></th> \
+            <th><a v-on:click="collapse(\'advanced\')"></a></th> \
         </tr> \
         <tr> \
-            <td><div>Leveraged ETFs</div></td> \
-            <td></td> \
-        </tr><tr> \
-            <td><div>Short ETFs</div></td> \
-            <td></td> \
-        </tr><tr> \
-            <td><div>Backtesting</div></td> \
-            <td></td> \
-        </tr></tbody> \
+            <td><span class="hint-right"> \
+                Backtest \
+                <i class="fa fa-question-circle"></i> \
+                <span>The number of months to backtest the algorithm on.</span> \
+            </span></td> \
+            <td> \
+                <input-range min="0" max="36" step="1" \
+                    :value.sync="params.backtest" \
+                    tostring="x+\'m\'" \
+                ></input-range> \
+            </td> \
+        </tr> \
+        <tr> \
+            <td><span class="hint-right"> \
+                Short ETFs \
+                <i class="fa fa-question-circle"></i> \
+                <span>Allow ETFs in the portfolio that short their positions. \
+                Not recommended unless you know what you are doing.</span> \
+            </span></td> \
+            <td> \
+                <input-checkbox name="allow_short" \
+                    :value.sync="params.allow_short" \
+                ></input-range> \
+            </td> \
+        </tr> \
+        <tr> \
+            <td><span class="hint-right"> \
+                Leveraged ETFs \
+                <i class="fa fa-question-circle"></i> \
+                <span>Allow ETFs in the portfolio that leverage their positions. \
+                Not recommended unless you know what you are doing.</span> \
+            </span></td> \
+            <td> \
+                <input-checkbox name="allow_leveraged" \
+                    :value.sync="params.allow_leveraged" \
+                ></input-range> \
+            </td> \
+        </tr> \
+        </tbody> \
         </table>'
 });
 
@@ -201,7 +241,7 @@ var locale = d3.locale({
 });
 
 Vue.component('vis-graph', {
-    props: ['solution', 'benchmarks', 'invested'],
+    props: ['params', 'solution', 'benchmarks', 'invested'],
     data: function() {
         return {
             chartData: {
@@ -278,6 +318,14 @@ Vue.component('vis-graph', {
         drawChart: function() {
             var date_format = d3.time.format("%B %Y");
             var value_format = locale.numberFormat('$n');
+            var markers = [
+                {'date': new Date('2009-03-31'), 'label': 'Trough of the 2008 crisis'}
+            ];
+            if(this.params.backtest > 0) {
+                markers.push({'date': this.portfolioCurveInvested[
+                    this.portfolioCurveInvested.length - this.params.backtest].date,
+                    'label': 'Backtest'});
+            }
             MG.data_graphic({
                 data: [this.benchmarkCurvesInvested[0], this.portfolioCurveInvested ? this.portfolioCurveInvested : []],
                 legend: ['MSCI World', 'Portfolio'],
@@ -292,7 +340,7 @@ Vue.component('vis-graph', {
                 full_width: true,
                 transition_on_update: false,
                 aggregate_rollover: false, // TODO: set this to true and rewrite mouseover
-                markers: [{'date': new Date('2009-03-31'), 'label': 'Trough of the 2008 crisis'}],
+                markers: markers,
                 mouseover: function(d, i) {
                     var value_format = locale.numberFormat('$n');
                     var prefix = d3.formatPrefix(d.value);
@@ -437,17 +485,17 @@ var app = Vue.extend({
         return {
             invested: 10000,
             params: {
-                weight: [0.05, 0.25],
+                weight: [0.09, 0.18],
                 'return': 0.10,
                 backtest: 0,
                 allow_short: false,
-                allow_leveraged: true,
+                allow_leveraged: false,
                 content: {
                     'Stocks': [0.0, 1.0],
-                    'Bonds': [0.0, 0.25],
-                    'Cash': [0.0, 0.25],
-                    'Commodities': [0.0, 1.0],
-                    'Real Estate': [0.0, 1.0]
+                    'Bonds': [0.0, 0.0],
+                    'Cash': [0.0, 0.0],
+                    'Commodities': [0.0, 0.18],
+                    'Real Estate': [0.0, 0.18]
                 },
                 sector: {
                     'Communication Services': [0.0, 1.0],
@@ -458,7 +506,7 @@ var app = Vue.extend({
                     'Healthcare': [0.0, 1.0],
                     'Industrials': [0.0, 1.0],
                     'Technology': [0.0, 1.0],
-                    'Utilities': [0.0, 1.0]
+                    'Utilities': [0.0, 0.0]
                 },
                 region: {
                     'Asia': [0.0, 0.66],
@@ -534,13 +582,13 @@ var app = Vue.extend({
                 <div class="vis-row"> \
                     <div class="vis-col"> \
                         <h1>Historical performance</h1> \
-                        <vis-graph :solution="solution" :invested="invested" :benchmarks="benchmarks"></vis-graph> \
+                        <vis-graph :params="params" :solution="solution" :invested="invested" :benchmarks="benchmarks"></vis-graph> \
                     </div> \
                     <!--<div class="vis-col"> \
                         <h1>Portfolio contents</h1> \
                     </div>--> \
                 </div> \
-                <h1>Your portfolio</h1> \
+                <h1><a style="color:inherit;text-decoration:none" href="{{solution.xray}}">Your portfolio <i class="fa fa-magic"></i></a></h1> \
                 <vis-table :solution="solution" :invested="invested"></vis-table> \
             </div> \
         </div>'
