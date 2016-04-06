@@ -506,7 +506,7 @@ var app = Vue.extend({
                     'Healthcare': [0.0, 1.0],
                     'Industrials': [0.0, 1.0],
                     'Technology': [0.0, 1.0],
-                    'Utilities': [0.0, 0.0]
+                    'Utilities': [0.0, 1.0]
                 },
                 region: {
                     'Asia': [0.0, 0.66],
