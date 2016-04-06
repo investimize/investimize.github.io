@@ -74,7 +74,7 @@ Vue.component('investimize-parameters', {
                 content: false,
                 region: true,
                 sector: true,
-                advanced: true
+                advanced: false
             },
             foo: true
         };
@@ -177,7 +177,7 @@ Vue.component('investimize-parameters', {
                 tostring="(100 * x).toFixed(0)+\'%\'"></double-input-range> \
             </td> \
         </tr></tbody> \
-        <tbody id="advanced"> \
+        <tbody id="advanced" :class="{\'collapsed\': collapsed.advanced}"> \
         <tr> \
             <th>Advanced</th> \
             <th><a v-on:click="collapse(\'advanced\')"></a></th> \
