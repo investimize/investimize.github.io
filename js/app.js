@@ -486,7 +486,7 @@ var app = Vue.extend({
             invested: 10000,
             params: {
                 weight: [0.09, 0.18],
-                'return': 0.10,
+                'return': 0.12,
                 backtest: 0,
                 allow_short: false,
                 allow_leveraged: false,
