@@ -493,7 +493,7 @@ var app = Vue.extend({
                 content: {
                     'Stocks': [0.0, 1.0],
                     'Bonds': [0.0, 0.0],
-                    'Cash': [0.0, 0.0],
+                    'Cash': [0.0, 0.09],
                     'Commodities': [0.0, 0.18],
                     'Real Estate': [0.0, 0.18]
                 },
@@ -509,9 +509,9 @@ var app = Vue.extend({
                     'Utilities': [0.0, 1.0]
                 },
                 region: {
-                    'Asia': [0.0, 0.66],
+                    'Asia': [0.1, 0.66],
                     'Emerging': [0.0, 0.66],
-                    'Europe': [0.1, 1.0],
+                    'Europe': [0.2, 1.0],
                     'North America': [0.2, 1.0],
                     'Oceania': [0.0, 0.66]
                 },
