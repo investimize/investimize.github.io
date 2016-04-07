@@ -493,7 +493,7 @@ var app = Vue.extend({
                 content: {
                     'Stocks': [0.0, 1.0],
                     'Bonds': [0.0, 0.0],
-                    'Cash': [0.0, 0.09],
+                    'Cash': [0.0, 0.0],
                     'Commodities': [0.0, 0.18],
                     'Real Estate': [0.0, 0.18]
                 },
