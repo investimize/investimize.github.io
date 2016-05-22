@@ -545,7 +545,7 @@ var app = Vue.extend({
             });
         },
         fetchBenchmarks: function () {
-            var benchmarkIsins = ['IE00B0M62Q58'];
+            var benchmarkIsins = ['US9229087443'];
             benchmarkIsins.forEach(function(benchmarkIsin) {
                 this.$http.get('etfs/' + benchmarkIsins[0] + '?verbose=true').then(function(response) {
                     this.benchmarks.push({
