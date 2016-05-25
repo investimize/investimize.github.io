@@ -566,7 +566,7 @@ nav > div:last-child a.active {
 
 /* Output. */
 
-#output i.fa-spin {
+#output .spinner {
     display: none;
 }
 
@@ -574,7 +574,7 @@ nav > div:last-child a.active {
     background-color: rgba(0, 0, 0, 0.1);
 }
 
-#output.waiting i.fa-spin {
+#output.waiting .spinner {
     display: inline;
     position: absolute;
     top: 50%;

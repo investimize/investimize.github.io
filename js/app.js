@@ -582,7 +582,7 @@ var app = Vue.extend({
                 <a href="#" class="chiclet" onclick="return false" v-on:click="fetchPortfolio()">Update <i class="fa fa-chevron-circle-right"></i></a> \
             </div> \
             <div id="output"> \
-                <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i> \
+                <div class="spinner"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div> \
                 <div class="vis-row"> \
                     <div class="vis-col"> \
                         <h1>Historical performance</h1> \
