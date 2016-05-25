@@ -566,6 +566,22 @@ nav > div:last-child a.active {
 
 /* Output. */
 
+#output i.fa-spin {
+    display: none;
+}
+
+#output.waiting {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+#output.waiting i.fa-spin {
+    display: inline;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
 #portfolio td:nth-child(2), #portfolio th:nth-child(2) {
     display: none;
 }

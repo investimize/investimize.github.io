@@ -538,10 +538,13 @@ var app = Vue.extend({
             }
         },
         fetchPortfolio: function() {
+            document.getElementById('output').className = 'waiting';
             this.$http.post('portfolio?verbose=true', this.params).then(function(response) {
                 this.solution = response.data;
+                document.getElementById('output').className = '';
             }, function(response) {
                 console.log('error', response);
+                document.getElementById('output').className = '';
             });
         },
         fetchBenchmarks: function () {
@@ -579,6 +582,7 @@ var app = Vue.extend({
                 <a href="#" class="chiclet" onclick="return false" v-on:click="fetchPortfolio()">Update <i class="fa fa-chevron-circle-right"></i></a> \
             </div> \
             <div id="output"> \
+                <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i> \
                 <div class="vis-row"> \
                     <div class="vis-col"> \
                         <h1>Historical performance</h1> \
