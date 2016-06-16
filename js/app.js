@@ -316,6 +316,9 @@ Vue.component('vis-graph', {
     },
     methods: {
         drawChart: function() {
+            if(!this.solution || !this.solution.portfolio) {
+                return;
+            }
             var date_format = d3.time.format("%B %Y");
             var value_format = locale.numberFormat('$n');
             var markers = [
