@@ -75,8 +75,7 @@ Vue.component('investimize-parameters', {
                 region: true,
                 sector: true,
                 advanced: false
-            },
-            foo: true
+            }
         };
     },
     methods: {
@@ -105,7 +104,7 @@ Vue.component('investimize-parameters', {
                 <span>The yearly return you would like on your portfolio.</span> \
             </span></th> \
             <th> \
-                <input-range min="0.02" max="0.15" step="0.005" \
+                <input-range min="0.02" max="0.20" step="0.005" \
                     :value.sync="params[\'return\']" \
                 tostring="(100 * x).toFixed(1)+\'%\'"></input-range> \
             </th> \
@@ -121,6 +120,19 @@ Vue.component('investimize-parameters', {
                     :value-min="params.weight[0]" :value-max="params.weight[1]" \
                     :value.sync="params.weight" \
                 tostring="(100 * x).toFixed(0)+\'%\'"></double-input-range> \
+            </th> \
+        </tr></tbody> \
+        <tbody><tr> \
+            <th><span class="hint-right"> \
+                P/E ratio \
+                <i class="fa fa-question-circle"></i> \
+                <span>The minimum and maximum P/E ratio of an ETF in your portfolio. A P/E ratio of 20 or more indicates that the price of the ETF (P) could be expensive relative to its earnings (E). Historically, 15 is the median P/E ratio.</span> \
+            </span></th> \
+            <th> \
+                <double-input-range min="1" max="30" step="1" \
+                    :value-min="params.pe_ratio[0]" :value-max="params.pe_ratio[1]" \
+                    :value.sync="params.pe_ratio" \
+                ></double-input-range> \
             </th> \
         </tr></tbody> \
         <tbody id="assetclass" :class="{\'collapsed\': collapsed.content}"> \
@@ -481,8 +493,7 @@ Vue.component('questions', {
 
 var app = Vue.extend({
     http: {
-        root: 'http://startup-master-mqxgysywwr.elasticbeanstalk.com/api/v0.1' // API root
-        // root: 'http://localhost:8000/api/v0.1' // API root
+        root: 'https://4u3pq2866j.execute-api.eu-west-1.amazonaws.com/dev' // 'http://127.0.0.1:5000'
     },
     data: function() {
         return {
@@ -490,6 +501,7 @@ var app = Vue.extend({
             params: {
                 weight: [0.09, 0.18],
                 'return': 0.12,
+                pe_ratio: [2.0, 20.0],
                 backtest: 0,
                 allow_short: false,
                 allow_leveraged: false,
@@ -542,7 +554,7 @@ var app = Vue.extend({
         },
         fetchPortfolio: function() {
             document.getElementById('output').className = 'waiting';
-            this.$http.post('portfolio?verbose=true', this.params).then(function(response) {
+            this.$http.post('portfolio', this.params).then(function(response) {
                 this.solution = response.data;
                 document.getElementById('output').className = '';
             }, function(response) {
@@ -551,29 +563,29 @@ var app = Vue.extend({
             });
         },
         fetchBenchmarks: function () {
-            var benchmarkIsins = ['US9229087443'];
-            benchmarkIsins.forEach(function(benchmarkIsin) {
-                this.$http.get('etfs/' + benchmarkIsins[0] + '?verbose=true').then(function(response) {
-                    this.benchmarks.push({
-                        'isin': benchmarkIsins[0],
+            var that = this;
+            this.$http.get('benchmarks').then(function(response) {
+                benchmarkIsin = response.data['MSCI World'];
+                this.$http.get('etfs/' + benchmarkIsin).then(function(response) {
+                    that.benchmarks.push({
+                        'isin': benchmarkIsin,
                         'timeseries': response.data.timeseries
                     });
+                    that.fetchPortfolio();
                 }, function(response) {
                     console.log('error', response);
                 });
-             }, this);
+            }, function(response) {
+                console.log('error', response);
+            });
             //console.log(this.benchmarks);
         }
     },
     ready: function () {
         // load the url params
-        this.convertAnswersToParams(this.$route.query);
-        
+        //this.convertAnswersToParams(this.$route.query);
         // load the benchmarks
         this.fetchBenchmarks();
-        
-        // load a portfolio to avoid empty screen
-        this.fetchPortfolio();    
     },
     template: ' \
         <div id="product" class="vue-wrapper"> \
