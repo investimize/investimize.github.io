@@ -72,7 +72,7 @@ Vue.component('investimize-parameters', {
         return {
             collapsed: {
                 content: false,
-                region: true,
+                region: false,
                 sector: true,
                 advanced: false
             }
@@ -198,7 +198,7 @@ Vue.component('investimize-parameters', {
             <td><span class="hint-right"> \
                 Backtest \
                 <i class="fa fa-question-circle"></i> \
-                <span>The number of months to backtest the algorithm on.</span> \
+                <span>The number of months to backtest the algorithm on. The dashed line indicates the start of the backtesting period, where the algorithm has not yet seen any data.</span> \
             </span></td> \
             <td> \
                 <input-range min="0" max="36" step="1" \
@@ -338,7 +338,7 @@ Vue.component('vis-graph', {
             ];
             if(this.params.backtest > 0) {
                 markers.push({'date': this.portfolioCurveInvested[
-                    this.portfolioCurveInvested.length - this.params.backtest].date,
+                    this.portfolioCurveInvested.length - this.params.backtest - 1].date,
                     'label': 'Backtest'});
             }
             MG.data_graphic({
@@ -500,17 +500,17 @@ var app = Vue.extend({
             invested: 10000,
             params: {
                 weight: [0.09, 0.18],
-                'return': 0.12,
+                'return': 0.14,
                 pe_ratio: [2.0, 20.0],
                 backtest: 0,
                 allow_short: false,
                 allow_leveraged: false,
                 content: {
-                    'Stocks': [0.0, 1.0],
+                    'Stocks': [0.0, 0.8],
                     'Bonds': [0.0, 0.0],
-                    'Cash': [0.0, 0.0],
-                    'Commodities': [0.0, 0.18],
-                    'Real Estate': [0.0, 0.18]
+                    'Cash': [0.0, 0.05],
+                    'Commodities': [0.0, 0.2],
+                    'Real Estate': [0.0, 0.2]
                 },
                 sector: {
                     'Communication Services': [0.0, 1.0],
