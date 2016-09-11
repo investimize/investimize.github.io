@@ -594,7 +594,7 @@ var app = Vue.extend({
                     <img>\
                 </a> \
                 <investimize-parameters :params.sync="params" :invested.sync="invested"></investimize-parameters> \
-                <a href="#" class="chiclet" onclick="return false" v-on:click="fetchPortfolio()">Update <i class="fa fa-chevron-circle-right"></i></a> \
+                <a href="#" class="chiclet" onclick="return false" v-on:click="fetchPortfolio()">Optimize <i class="fa fa-chevron-circle-right"></i></a> \
             </div> \
             <div id="output"> \
                 <div class="spinner"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div> \
