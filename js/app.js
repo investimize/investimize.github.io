@@ -500,16 +500,16 @@ var app = Vue.extend({
             invested: 10000,
             params: {
                 weight: [0.09, 0.18],
-                'return': 0.14,
-                pe_ratio: [2.0, 20.0],
+                'return': 0.10,
+                pe_ratio: [2.0, 24.0],
                 backtest: 0,
                 allow_short: false,
                 allow_leveraged: false,
                 content: {
-                    'Stocks': [0.0, 0.8],
-                    'Bonds': [0.0, 0.0],
-                    'Cash': [0.0, 0.05],
-                    'Commodities': [0.0, 0.2],
+                    'Stocks': [0.0, 1.0],
+                    'Bonds': [0.0, 0.6],
+                    'Cash': [0.0, 0.10],
+                    'Commodities': [0.0, 0.6],
                     'Real Estate': [0.0, 0.2]
                 },
                 sector: {
@@ -524,11 +524,11 @@ var app = Vue.extend({
                     'Utilities': [0.0, 1.0]
                 },
                 region: {
-                    'Asia': [0.1, 0.66],
-                    'Emerging': [0.0, 0.66],
+                    'Asia': [0.0, 1.0],
+                    'Emerging': [0.0, 1.0],
                     'Europe': [0.2, 1.0],
                     'North America': [0.2, 1.0],
-                    'Oceania': [0.0, 0.66]
+                    'Oceania': [0.0, 1.0]
                 },
             },
             solution: {},
