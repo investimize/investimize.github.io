@@ -72,7 +72,7 @@ Vue.component('investimize-parameters', {
         return {
             collapsed: {
                 content: false,
-                region: false,
+                region: true,
                 sector: true,
                 advanced: false
             }
